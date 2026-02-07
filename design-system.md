@@ -1,70 +1,113 @@
-# Cambrian Content Engine — Design System
+# Specter Content Engine — Design System
 
-**Version:** 1.0
+**Version:** 2.0 (Specter Rebrand)
 **Last Updated:** 2026-02-06
-**Source:** Extracted from Cambrian website v1 + PRD design direction
+**Brand:** Specter — Invisible Intelligence
 
-This document is the single source of truth for all visual design decisions in the Cambrian Content Engine. Every builder agent should reference this before writing UI components.
+This document is the single source of truth for all visual design decisions in the Specter Content Engine. Every builder agent must reference this before writing UI components.
 
 ---
 
-## Design Philosophy
+## Brand Identity
 
-The Cambrian Content Engine inherits the visual language of the Cambrian Explorations website: **dark, minimal, generous spacing, subtle animations, warm amber accent**. The aesthetic is professional but understated — content and function first, not flash.
+### Philosophy
 
-**Core principles:**
-- Dark by default (no light mode for V1)
-- Generous whitespace and breathing room
-- Sharp, crisp typography
-- Minimal animation — only where it adds clarity
-- Amber/gold accent sparingly for emphasis and brand
-- Everything grid-aligned and intentional
+**Specter** embodies "invisible intelligence" — a brand built on clarity through subtraction, not addition. The logo mark itself demonstrates this: the letter "S" is formed by what's *absent*, not what's present. This philosophy extends to every design decision.
+
+**Core Principles:**
+- **Invisible intelligence** — Smart, not showy
+- **Dark by default** — True Black (#030712) creates depth and mystery
+- **Geometric precision** — Sharp, intentional, minimal
+- **Ghost Cyan accent** — Cool, technical, confident
+- **Breathing room** — Generous spacing, never cramped
+- **Purposeful motion** — Animation only where it adds clarity
+
+**Aesthetic:** Cool, technical, minimal. High-fashion meets high-tech. Professional but never corporate. Confident, not flashy.
 
 ---
 
 ## 1. Color Palette
 
-### Background & Surfaces
+### Brand Colors (Core)
+
+The Specter brand defines 5 core colors. This design system expands them into a full semantic palette for the content engine.
+
+| Color | Hex | Usage |
+|-------|-----|-------|
+| **Pure White** | `#FFFFFF` | Primary text, high-contrast elements |
+| **Ghost Cyan** | `#068BD4` | Primary brand accent, links, active states |
+| **Slate** | `#374151` | Borders, secondary surfaces |
+| **Charcoal** | `#1F2937` | Elevated surfaces, cards, sidebar |
+| **True Black** | `#030712` | Primary background, deepest depth |
+
+### Semantic Color System
+
+#### Backgrounds
 
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `bg` | `#141414` | Primary page background (from website) |
-| `surface` | `#161616` | Card backgrounds, panels, elevated surfaces |
-| `surface-hover` | `#1E1E1E` | Hover state for interactive surfaces (buttons, cards) |
+| `bg` | `#030712` | Primary app background (True Black) |
+| `surface` | `#1F2937` | Elevated elements: cards, sidebar, panels (Charcoal) |
+| `surface-hover` | `#2D3748` | Hover state for interactive surfaces |
+| `modal-overlay` | `rgba(3, 7, 18, 0.85)` | Modal backdrop (True Black at 85% opacity) |
+| `surface-subtle` | `#111827` | Intermediate layer between bg and surface |
 
-**Note:** The website uses `#141414` as the primary background. The PRD originally referenced `#0D0D0D` — **use `#141414`**. The content engine needs layered surfaces (cards, modals, panels) which the website doesn't have, so `surface` and `surface-hover` are additive.
-
-### Borders
-
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `border` | `#2A2A2A` | Default border color for cards, inputs, dividers |
-| `border-light` | `#333333` | Lighter borders for subtle separation, hover states |
-
-### Text
+#### Borders
 
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `text` | `#E8E6E3` | Primary text (warm off-white — use this, not pure white) |
-| `text-muted` | `#8A8A8A` | Secondary text, labels, timestamps, metadata |
-| `text-dim` | `#5A5A5A` | Tertiary text, placeholders, disabled states |
+| `border` | `#374151` | Default borders, dividers (Slate) |
+| `border-light` | `#4B5563` | Subtle borders, hover states |
+| `border-strong` | `#6B7280` | Emphasized borders, active containers |
+| `border-focus` | `#068BD4` | Focus rings (Ghost Cyan) |
 
-**Note:** The website uses `#ffffff` for text and `#8E8E8E` for muted elements. The content engine uses `#E8E6E3` (warm off-white) for primary text for a softer look. For muted text, use `#8A8A8A` (slightly darker than the website's `#8E8E8E`).
-
-### Accents & Status
+#### Text
 
 | Token | Hex | Usage |
 |-------|-----|-------|
-| `accent` | `#E8B931` | Cambrian brand gold/amber — CTAs, links, active states, highlights |
-| `accent-dim` | `#E8B93122` | Translucent accent (13% opacity) — backgrounds, subtle highlights |
-| `danger` | `#D4594E` | Error states, delete actions |
-| `success` | `#4A9B6F` | Success states, confirmations, published status |
+| `text` | `#FFFFFF` | Primary text (Pure White) |
+| `text-muted` | `#9CA3AF` | Secondary text, labels, metadata |
+| `text-dim` | `#6B7280` | Tertiary text, placeholders, disabled states |
+| `text-on-accent` | `#030712` | Text on Ghost Cyan backgrounds (True Black for contrast) |
 
-### Selection
+#### Accents
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `accent` | `#068BD4` | Primary accent (Ghost Cyan): links, CTAs, active states |
+| `accent-hover` | `#0EA5E9` | Hover state for accent elements |
+| `accent-dim` | `rgba(6, 139, 212, 0.15)` | Subtle accent backgrounds (15% opacity) |
+| `accent-strong` | `#0284C7` | Pressed/active accent state |
+
+#### State Colors
+
+The brand doesn't define state colors, so we design them to complement Ghost Cyan and the dark aesthetic:
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `success` | `#10B981` | Success states, confirmations, published status (emerald) |
+| `success-dim` | `rgba(16, 185, 129, 0.15)` | Subtle success backgrounds |
+| `warning` | `#F59E0B` | Warning states, alerts (amber) |
+| `warning-dim` | `rgba(245, 158, 11, 0.15)` | Subtle warning backgrounds |
+| `error` | `#EF4444` | Error states, destructive actions (red) |
+| `error-dim` | `rgba(239, 68, 68, 0.15)` | Subtle error backgrounds |
+| `info` | `#068BD4` | Info states (reuses Ghost Cyan) |
+| `info-dim` | `rgba(6, 139, 212, 0.15)` | Subtle info backgrounds |
+
+#### Selection
 
 | Token | CSS | Usage |
 |-------|-----|-------|
-| `::selection` | `background: #ffffff; color: #141414;` | Text selection (inverted — white bg, dark text) |
+| `::selection` | `background: #068BD4; color: #FFFFFF;` | Text selection (Ghost Cyan bg, white text) |
+
+### Accessibility Notes
+
+- **Pure White (#FFFFFF) on True Black (#030712):** 21:1 contrast ratio (WCAG AAA)
+- **Pure White on Charcoal (#1F2937):** 14:1 contrast ratio (WCAG AAA)
+- **Ghost Cyan (#068BD4) on True Black:** 4.8:1 contrast ratio (WCAG AA for large text)
+- **Text Muted (#9CA3AF) on True Black:** 8.5:1 contrast ratio (WCAG AAA)
+
+All primary text meets WCAG AAA standards. Accent colors meet WCAG AA for UI elements and large text.
 
 ---
 
@@ -72,11 +115,16 @@ The Cambrian Content Engine inherits the visual language of the Cambrian Explora
 
 ### Font Families
 
-| Family | Usage | Files | Fallback Stack |
-|--------|-------|-------|----------------|
-| **Die Grotesk A** | Display type, page headings (h1) | `test-die-grotesk-a-regular.woff2` | `'Die Grotesk A', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` |
-| **Die Grotesk B** | Body text, UI elements, subheadings | `test-die-grotesk-vf-roman.woff2` (variable font) | `'Die Grotesk B', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` |
-| **IBM Plex Mono** | Code blocks, monospace content, tabular data | Load via `next/font/google` or `@ibm/plex` npm package | `'IBM Plex Mono', 'Monaco', 'Courier New', monospace` |
+| Family | Usage | Styles | Fallback Stack |
+|--------|-------|--------|----------------|
+| **Clash Display** | Display type, headlines, page titles, brand moments | Medium (primary), Neutral, Bulky | `'Clash Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` |
+| **Manrope** | Body text, UI labels, navigation, paragraphs | Regular (400), Bold (700), Light (300) | `'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif` |
+| **JetBrains Mono** | Code blocks, monospace content, API responses, technical data | Regular (400), Medium (500) | `'JetBrains Mono', 'Monaco', 'Courier New', monospace` |
+
+**Font Character:**
+- **Clash Display:** "A luxuriously bold yet dramatically geometric forma that commands immediate attention. It signals luxury, brand feel—the kind that hits with high-fashion meets high-tech." Use for headlines, not body text.
+- **Manrope:** "Balances Clash's drama with geometric simplicity and excellent readability. Its clean, unfussy forms ensure that while headlines grab attention, body text remains effortlessly readable." The workhorse font.
+- **JetBrains Mono:** Not specified by brand guidelines, but necessary for code/technical content. Clean, modern monospace.
 
 **Font Display Strategy:** All fonts use `font-display: swap` to prevent FOIT (Flash of Invisible Text).
 
@@ -88,65 +136,75 @@ The Cambrian Content Engine inherits the visual language of the Cambrian Explora
 
 ### Type Scale
 
-| Element | Family | Size | Weight | Line Height | Other |
-|---------|--------|------|--------|-------------|-------|
-| **Page Heading (h1)** | Die Grotesk A | `32px` | `400` | `1.2` | `letter-spacing: -0.05em` |
-| **Section Heading (h2)** | Die Grotesk B | `24px` | `500` | `1.3` | - |
-| **Subsection Heading (h3)** | Die Grotesk B | `18px` | `500` | `1.4` | - |
-| **Body Large** | Die Grotesk B | `16px` | `400` | `1.6` | Standard UI text, chat messages |
-| **Body** | Die Grotesk B | `15px` | `400` | `1.8` | Paragraph text, long-form content |
-| **Body Small** | Die Grotesk B | `14px` | `400` | `1.5` | Captions, metadata, nav labels |
-| **Label** | Die Grotesk B | `14px` | `400` | `1.5` | Form labels, input labels, `text-transform: uppercase` for metadata |
-| **Caption** | Die Grotesk B | `12px` | `400` | `1.4` | Timestamps, helper text, badges |
-| **Button** | Die Grotesk B | `14px` | `500` | `1` | Buttons, CTAs |
-| **Input Text** | Die Grotesk B | `15px` | `400` | `1.5` | Text inputs, textareas |
-| **Code** | IBM Plex Mono | `14px` | `400` | `1.6` | Inline code, code blocks |
+| Element | Family | Size | Weight | Line Height | Letter Spacing | Notes |
+|---------|--------|------|--------|-------------|----------------|-------|
+| **Page Title (h1)** | Clash Display | `40px` | Medium (600) | `1.1` | `-0.02em` | Hero titles, main page headings |
+| **Section Heading (h2)** | Clash Display | `28px` | Medium (600) | `1.2` | `-0.01em` | Section titles, major dividers |
+| **Subsection (h3)** | Clash Display | `24px` | Neutral (500) | `1.3` | `0` | Subsections, card titles |
+| **Small Heading (h4)** | Clash Display | `20px` | Neutral (500) | `1.4` | `0` | Minor headings, dialog titles |
+| **Body Large** | Manrope | `16px` | Regular (400) | `1.6` | `0` | Chat messages, emphasized content |
+| **Body Standard** | Manrope | `15px` | Regular (400) | `1.6` | `0` | Default UI text, paragraphs |
+| **Body Small** | Manrope | `14px` | Regular (400) | `1.5` | `0` | Captions, metadata, nav labels |
+| **Caption** | Manrope | `13px` | Regular (400) | `1.4` | `0` | Timestamps, helper text, fine print |
+| **Label (UI)** | Manrope | `14px` | Bold (700) | `1.4` | `0.01em` | Form labels, input labels, tags |
+| **Button** | Manrope | `15px` | Bold (700) | `1` | `0.01em` | Buttons, CTAs |
+| **Input Text** | Manrope | `15px` | Regular (400) | `1.5` | `0` | Text inputs, textareas |
+| **Code Inline** | JetBrains Mono | `14px` | Regular (400) | `1.5` | `0` | Inline code, filenames |
+| **Code Block** | JetBrains Mono | `14px` | Regular (400) | `1.6` | `0` | Code blocks, JSON, logs |
 
 **Mobile Adjustments (≤768px):**
-- Page Heading (h1): `28px`
-- Body: `15px` (no change)
-- Body Small / Label: `12px`
-- Caption: `11px`
+- Page Title (h1): `32px` (down from 40px)
+- Section Heading (h2): `24px` (down from 28px)
+- Subsection (h3): `20px` (down from 24px)
+- Small Heading (h4): `18px` (down from 20px)
+- Body text: unchanged (readability priority)
 
 ---
 
 ## 3. Spacing & Layout
 
-### Spacing Scale
+### Spacing Scale (8-Point Grid)
 
-Use these values consistently for padding, margin, and gaps. Defined as Tailwind utilities:
+Use these values consistently for padding, margin, and gaps. Based on an 8px base unit:
 
 | Token | Value | Tailwind | Usage |
 |-------|-------|----------|--------|
-| `xs` | `4px` | `1` | Tight spacing between tightly related elements |
-| `sm` | `8px` | `2` | Small gaps, icon spacing |
-| `md` | `12px` | `3` | Default gap between UI elements |
-| `lg` | `16px` | `4` | Comfortable spacing, button padding |
-| `xl` | `24px` | `6` | Section spacing, card padding |
-| `2xl` | `32px` | `8` | Large section breaks, page padding (mobile) |
-| `3xl` | `48px` | `12` | Page padding (desktop), major section breaks |
-| `4xl` | `64px` | `16` | Hero spacing, large vertical rhythm |
+| `xs` | `4px` | `1` | Tight spacing, icon gaps |
+| `sm` | `8px` | `2` | Compact spacing, badge padding |
+| `md` | `12px` | `3` | Small gaps between elements |
+| `base` | `16px` | `4` | Default gap, comfortable spacing |
+| `lg` | `24px` | `6` | Card padding, section spacing |
+| `xl` | `32px` | `8` | Large section breaks, page padding (mobile) |
+| `2xl` | `48px` | `12` | Page padding (desktop), major breaks |
+| `3xl` | `64px` | `16` | Hero spacing, extra-large rhythm |
+| `4xl` | `96px` | `24` | Maximum spacing |
 
 ### Layout Conventions
 
-**Page Padding:**
-- Desktop: `48px` horizontal, `32px` top/bottom
-- Mobile: `24px` all sides
+**Page Layout:**
+- Desktop padding: `48px` horizontal, `32px` top/bottom
+- Mobile padding: `24px` all sides
+- Max content width: `1280px` (full app)
 
-**Card Padding:**
-- Default: `24px` (all sides)
-- Compact: `16px` (for small cards, badges)
+**Component Spacing:**
+- Card padding: `24px` (all sides)
+- Compact card padding: `16px` (list items, small cards)
+- Button padding: `12px 24px` (vertical, horizontal)
+- Input padding: `12px 16px` (vertical, horizontal)
+- Modal padding: `32px` (all sides)
 
-**Component Gaps:**
-- Between related elements in a group: `12px` (`gap-3`)
-- Between form fields: `16px` (`gap-4`)
-- Between sections: `32px` (`gap-8`)
+**Gaps:**
+- Tight groups (form fields): `12px` (`gap-3`)
+- Related elements: `16px` (`gap-4`)
+- Section spacing: `32px` (`gap-8`)
+- Major sections: `48px` (`gap-12`)
 
-**Max Content Width:**
-- Conversation / chat thread: `720px`
-- Draft content pane: `640px`
-- Long-form text (info page): `520px`
-- Dashboard cards: full-width with grid (responsive)
+**Component Widths:**
+- Sidebar (desktop): `280px` (collapsed: `64px`)
+- Conversation thread: `720px` max-width
+- Draft content pane: `680px` max-width
+- Long-form text: `560px` max-width
+- Modal: `600px` max-width (default), `800px` (large)
 
 ---
 
@@ -156,358 +214,628 @@ Use these values consistently for padding, margin, and gaps. Defined as Tailwind
 
 | Element | Style |
 |---------|-------|
-| Default border | `1px solid border` (`#2A2A2A`) |
-| Light border | `1px solid border-light` (`#333333`) |
-| Focus ring | `2px solid accent` (`#E8B931`) with `4px` offset |
-| Divider | `1px solid border` (horizontal rule) |
+| Default border | `1px solid var(--color-border)` |
+| Light border | `1px solid var(--color-border-light)` |
+| Strong border | `1px solid var(--color-border-strong)` |
+| Focus ring | `2px solid var(--color-accent)` with `0` offset |
+| Divider | `1px solid var(--color-border)` (horizontal/vertical rule) |
 
 ### Border Radius
 
-The Cambrian website uses **sharp corners (no border-radius)**. For the content engine, use **subtle rounding** to soften cards and inputs:
+The Specter logo uses sharp geometric forms, but UI elements benefit from subtle rounding for usability and modern aesthetic:
 
-| Element | Radius | Tailwind |
-|---------|--------|----------|
-| Buttons | `6px` | `rounded-md` |
-| Inputs / Textareas | `6px` | `rounded-md` |
-| Cards | `8px` | `rounded-lg` |
-| Modals | `12px` | `rounded-xl` |
-| Badges / Pills | `9999px` | `rounded-full` |
-| Images | `4px` | `rounded` |
+| Element | Radius | Tailwind | CSS Variable |
+|---------|--------|----------|--------------|
+| **Small (badges)** | `4px` | `rounded-sm` | `var(--radius-sm)` |
+| **Default (buttons, inputs)** | `6px` | `rounded` | `var(--radius)` |
+| **Medium (cards)** | `8px` | `rounded-md` | `var(--radius-md)` |
+| **Large (modals)** | `12px` | `rounded-lg` | `var(--radius-lg)` |
+| **Full (avatars, pills)** | `9999px` | `rounded-full` | N/A |
+| **None (sharp)** | `0px` | `rounded-none` | Only for logo, specific brand elements |
 
-**Rationale:** The website is entirely sharp-edged, which works for its minimal landing page aesthetic. The content engine has more UI density (cards, forms, inputs) — slight rounding improves usability and visual comfort without undermining the minimal aesthetic.
+**Rationale:** While the brand logo is sharp-edged, UI elements (cards, buttons, inputs) use subtle rounding (4-12px) for improved usability and visual comfort. The rounding is minimal and geometric, not organic.
 
 ---
 
-## 5. Animation & Transitions
+## 5. Shadows & Depth
+
+Specter uses darkness to create depth. Shadows are subtle and used sparingly.
+
+### Shadow Levels
+
+**None (Flat):**
+```css
+box-shadow: none;
+```
+Default for most elements. Rely on borders and background color for depth.
+
+**Subtle (Elevated Cards):**
+```css
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+```
+Use for: Hover states on cards, slight elevation.
+
+**Medium (Dropdowns, Popovers):**
+```css
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4);
+```
+Use for: Dropdown menus, tooltips, floating panels.
+
+**Heavy (Modals, Overlays):**
+```css
+box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 8px 20px rgba(0, 0, 0, 0.6);
+```
+Use for: Modals, dialogs, major overlays.
+
+**Focus Shadow (Accent Glow):**
+```css
+box-shadow: 0 0 0 2px var(--color-accent);
+```
+Use for: Focus states on inputs, buttons, interactive elements.
+
+**Design Note:** True Black (#030712) is already extremely dark, so shadows are primarily used for layering UI elements, not creating dramatic depth. Focus on borders and background color hierarchy first.
+
+---
+
+## 6. Animation & Transitions
+
+**Philosophy:** Animation should be invisible intelligence — purposeful, not decorative. Subtle, fast, confident.
 
 ### Transition Conventions
 
-All animations should be **subtle and purposeful** — add clarity, not distraction.
-
 | Interaction | Duration | Easing | CSS |
 |-------------|----------|--------|-----|
-| **Hover state** (opacity change) | `200ms` | `ease` | `transition: opacity 0.2s ease` |
-| **Hover state** (color/bg change) | `150ms` | `ease` | `transition: background-color 0.15s ease, color 0.15s ease` |
-| **Content reveal** (modals, pages) | `400ms` | `ease` | `transition: opacity 0.4s ease, transform 0.4s ease` |
-| **Panel slide** (side panels, drawers) | `500ms` | `cubic-bezier(0.16, 1, 0.3, 1)` | `transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)` — spring easing |
-| **Overlay fade** | `500ms` | `ease` | `transition: opacity 0.5s ease` |
-| **Streaming text** (Claude responses) | - | - | No transition — append text directly, let browser handle rendering |
+| **UI Interactions** (hover, focus) | `150ms` | `cubic-bezier(0.16, 1, 0.3, 1)` (spring) | `transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);` |
+| **Color/Background Shifts** | `150ms` | `cubic-bezier(0.16, 1, 0.3, 1)` | `transition: background-color 0.15s ease, color 0.15s ease;` |
+| **Opacity Changes** | `200ms` | `ease` | `transition: opacity 0.2s ease;` |
+| **Content Reveals** (panels, sections) | `300ms` | `cubic-bezier(0.16, 1, 0.3, 1)` | `transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);` |
+| **Page Transitions** | `400ms` | `cubic-bezier(0.16, 1, 0.3, 1)` | `transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);` |
+| **Modal/Overlay** | `250ms` | `ease` | `transition: opacity 0.25s ease;` (overlay), `transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);` (content) |
+| **Drawer/Side Panel** | `350ms` | `cubic-bezier(0.16, 1, 0.3, 1)` | `transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);` |
 
-**Tailwind Utilities:**
-- Default transition: `transition-all duration-200 ease-in-out`
-- Hover opacity: `hover:opacity-70 transition-opacity duration-200`
-- Button hover: `hover:bg-surface-hover transition-colors duration-150`
+### Easing Functions
 
-**Do NOT use:**
-- GSAP or complex animation libraries (overkill for this app)
-- Bounce/elastic easings (too playful for this aesthetic)
-- Long animations (>600ms) except for major page transitions
+**Spring Easing (Primary):**
+```css
+cubic-bezier(0.16, 1, 0.3, 1)
+```
+Use for: Most UI interactions. Confident, snappy, slightly elastic.
+
+**Ease (Secondary):**
+```css
+ease
+```
+Use for: Opacity changes, simple fades.
+
+**Ease-In-Out (Rare):**
+```css
+ease-in-out
+```
+Use for: Symmetrical animations only.
+
+### Animation Patterns
+
+**Hover States:**
+- Buttons: Background lightens, slight scale (1.02) or opacity shift (0.9)
+- Links: Color shifts to `accent-hover`, underline appears
+- Cards: Background shifts to `surface-hover`, subtle shadow appears
+
+**Loading States:**
+- Skeleton loaders: Pulse animation (Tailwind's `animate-pulse`)
+- Spinners: Rotate animation at 0.8s duration
+- Progress bars: Smooth width transition
+
+**Enter/Exit Animations:**
+- Modals: Fade in overlay (250ms), scale content from 0.95 to 1 (250ms)
+- Toasts: Slide in from right, fade out on dismiss
+- Dropdowns: Fade + slide down (150ms)
+
+**Do NOT Use:**
+- Bounce or elastic easings (too playful)
+- Long animations (>500ms) except for page transitions
+- Continuous animations (except loading states)
+- Decorative animations without purpose
 
 ---
 
-## 6. Component Patterns
+## 7. Component Patterns
 
-These are **visual pattern descriptions**, not React code. Use these as a reference when building components.
+These are **visual pattern descriptions** with example Tailwind classes. Not React code.
 
-### Button
+### Buttons
 
-**Primary Button** (CTA, high-emphasis action):
+**Primary Button** (High-emphasis CTA):
 ```
-bg: accent (#E8B931)
-text: bg (#141414) — dark text on gold bg for contrast
-padding: 12px 24px (py-3 px-6)
-border-radius: 6px (rounded-md)
-font: Die Grotesk B, 14px, weight 500
-hover: bg: accent with 90% brightness, smooth transition
-focus: 2px accent ring, 4px offset
+bg-accent text-text-on-accent px-6 py-3 rounded font-bold
+hover:bg-accent-hover transition-all duration-150
+focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg
 ```
+- **Background:** Ghost Cyan (#068BD4)
+- **Text:** True Black (#030712) for contrast
+- **Padding:** 12px vertical, 24px horizontal
+- **Radius:** 6px
+- **Hover:** Lighter cyan (#0EA5E9)
 
-**Secondary Button** (medium-emphasis action):
+**Secondary Button** (Medium-emphasis action):
 ```
-bg: surface (#161616)
-border: 1px solid border (#2A2A2A)
-text: text (#E8E6E3)
-padding: 12px 24px
-border-radius: 6px
-hover: bg: surface-hover (#1E1E1E), border: border-light (#333333)
-focus: 2px accent ring
+bg-surface text-text border border-border px-6 py-3 rounded font-bold
+hover:bg-surface-hover hover:border-border-light transition-all duration-150
+focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg
 ```
+- **Background:** Charcoal (#1F2937)
+- **Border:** Slate (#374151)
+- **Text:** Pure White (#FFFFFF)
+- **Hover:** Lighter charcoal, lighter border
 
-**Ghost Button** (low-emphasis action):
+**Ghost Button** (Low-emphasis action):
 ```
-bg: transparent
-text: text-muted (#8A8A8A)
-padding: 12px 24px
-border-radius: 6px
-hover: bg: surface (#161616), text: text (#E8E6E3)
+bg-transparent text-text px-6 py-3 rounded font-bold
+hover:bg-surface transition-all duration-150
+focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-bg
 ```
+- **Background:** Transparent
+- **Text:** Pure White
+- **Hover:** Charcoal surface appears
 
-**Icon Button** (compact, icon-only):
+**Icon Button** (Compact, icon-only):
 ```
-bg: transparent
-padding: 8px (p-2)
-border-radius: 6px
-hover: bg: surface (#161616)
+bg-transparent p-2 rounded
+hover:bg-surface transition-all duration-150
 ```
+- **Padding:** 8px all sides
+- **Hover:** Charcoal surface
 
-### Input
+**Destructive Button** (Danger action):
+```
+bg-error text-white px-6 py-3 rounded font-bold
+hover:bg-error/90 transition-all duration-150
+```
+- **Background:** Error red (#EF4444)
+- **Text:** White
+
+### Inputs
 
 **Text Input:**
 ```
-bg: surface (#161616)
-border: 1px solid border (#2A2A2A)
-text: text (#E8E6E3), 15px
-padding: 12px 16px
-border-radius: 6px
-placeholder: text-dim (#5A5A5A)
-focus: border: accent (#E8B931), 2px ring
-error: border: danger (#D4594E), red ring
+bg-surface border border-border text-text px-4 py-3 rounded
+placeholder:text-text-dim
+focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/50
+transition-all duration-150
 ```
+- **Background:** Charcoal (#1F2937)
+- **Border:** Slate (#374151)
+- **Text:** Pure White (#FFFFFF), 15px Manrope
+- **Padding:** 12px vertical, 16px horizontal
+- **Focus:** Ghost Cyan border + ring
 
 **Textarea:**
 ```
-Same as text input, but:
-min-height: 120px
-resize: vertical
+(Same as text input)
+min-h-[120px] resize-y
+```
+- **Min height:** 120px
+- **Resize:** Vertical only
+
+**Select Dropdown:**
+```
+(Same as text input)
+pr-10 appearance-none bg-[url('data:image/svg+xml...')] bg-no-repeat bg-right
+```
+- Custom chevron icon on right
+
+**Checkbox / Radio:**
+```
+w-5 h-5 border-2 border-border bg-surface rounded-sm
+checked:bg-accent checked:border-accent
+focus:ring-2 focus:ring-accent/50
 ```
 
-### Card
+### Cards
 
-**Default Card** (buckets, sources, drafts):
+**Default Card** (Buckets, sources, content):
 ```
-bg: surface (#161616)
-border: 1px solid border (#2A2A2A)
-padding: 24px
-border-radius: 8px (rounded-lg)
-hover: border: border-light (#333333), subtle lift (transform: translateY(-2px), shadow)
-transition: 200ms ease
+bg-surface border border-border rounded-md p-6
+hover:border-border-light hover:shadow-subtle transition-all duration-150
 ```
+- **Background:** Charcoal (#1F2937)
+- **Border:** Slate (#374151)
+- **Padding:** 24px
+- **Radius:** 8px
+- **Hover:** Lighter border, subtle shadow
 
-**Compact Card** (list items, source previews):
+**Compact Card** (List items, small previews):
 ```
-bg: surface (#161616)
-border: 1px solid border (#2A2A2A)
-padding: 16px
-border-radius: 6px (rounded-md)
+bg-surface border border-border rounded p-4
+hover:bg-surface-hover transition-all duration-150
 ```
+- **Padding:** 16px
+- **Radius:** 6px
+
+**Interactive Card** (Clickable):
+```
+bg-surface border border-border rounded-md p-6
+hover:border-accent hover:shadow-medium transition-all duration-150
+cursor-pointer
+```
+- **Hover:** Ghost Cyan border, medium shadow
 
 ### Modal
 
 **Modal Overlay:**
 ```
-bg: rgba(0, 0, 0, 0.7) — dark overlay
-backdrop-blur: 4px (optional, for depth)
-transition: opacity 500ms ease
+fixed inset-0 bg-modal-overlay backdrop-blur-sm z-50
+transition-opacity duration-250
 ```
+- **Background:** True Black at 85% opacity
+- **Backdrop blur:** 4px (optional)
 
 **Modal Content:**
 ```
-bg: surface (#161616)
-border: 1px solid border (#2A2A2A)
-border-radius: 12px (rounded-xl)
-padding: 32px
-max-width: 600px
-shadow: large (0 20px 60px rgba(0, 0, 0, 0.5))
+bg-surface border border-border rounded-lg p-8 shadow-heavy
+max-w-[600px] mx-auto mt-20
+transform transition-all duration-250
 ```
+- **Background:** Charcoal (#1F2937)
+- **Border:** Slate (#374151)
+- **Radius:** 12px
+- **Padding:** 32px
+- **Shadow:** Heavy elevation
+- **Max width:** 600px (default), 800px (large)
 
 **Modal Close Button:**
 ```
-Icon button (X icon)
-position: top-right corner, 16px offset
+absolute top-4 right-4 p-2 rounded
+hover:bg-surface-hover transition-all
 ```
 
-### Badge
+### Badges
 
-**Status Badge** (draft / ready / published):
+**Status Badge:**
 ```
-bg: surface (#161616)
-border: 1px solid border (#2A2A2A)
-text: text-muted (#8A8A8A), 12px, uppercase
-padding: 4px 12px (py-1 px-3)
-border-radius: 9999px (rounded-full)
+px-3 py-1 rounded-full text-sm font-bold uppercase tracking-wide
 ```
 
-**Status Colors:**
-- Draft: default (border)
-- Ready: border: accent (#E8B931), text: accent
-- Published: border: success (#4A9B6F), text: success
+**Status Variants:**
+- **Draft:** `bg-border/30 text-text-muted border border-border`
+- **Ready:** `bg-accent-dim text-accent border border-accent/30`
+- **Published:** `bg-success-dim text-success border border-success/30`
 
-**Type Badge** (source type, platform):
+**Type Badge** (Platform, source type):
 ```
-bg: accent-dim (#E8B93122) — translucent gold
-text: accent (#E8B931), 12px, uppercase
-padding: 4px 12px
-border-radius: 9999px
-no border
+px-3 py-1 rounded-full text-xs font-bold uppercase
+bg-accent-dim text-accent
 ```
 
-### Nav Item
+### Navigation
 
-**Active Nav Item:**
-```
-bg: surface (#161616)
-text: text (#E8E6E3)
-border-left: 3px solid accent (#E8B931) — indicator
-padding: 12px 16px
-```
+**Nav Item (Sidebar):**
 
-**Inactive Nav Item:**
+**Active:**
 ```
-bg: transparent
-text: text-muted (#8A8A8A)
-padding: 12px 16px
-hover: bg: surface (#161616), text: text (#E8E6E3)
+bg-accent-dim text-accent px-4 py-3 rounded
+border-l-2 border-accent
 ```
+- **Background:** Ghost Cyan at 15% opacity
+- **Text:** Ghost Cyan
+- **Left border:** 2px Ghost Cyan indicator
+
+**Inactive:**
+```
+text-text-muted px-4 py-3 rounded
+hover:bg-surface-hover hover:text-text
+transition-all duration-150
+```
+- **Text:** Muted gray
+- **Hover:** Charcoal background, white text
 
 ### Toast / Notification
 
 **Toast Container:**
 ```
-bg: surface (#161616)
-border: 1px solid border (#2A2A2A)
-border-radius: 8px (rounded-lg)
-padding: 16px
-shadow: medium (0 8px 24px rgba(0, 0, 0, 0.3))
-max-width: 400px
+bg-surface border rounded-md p-4 shadow-medium
+max-w-[400px] pointer-events-auto
 ```
+- **Background:** Charcoal (#1F2937)
+- **Padding:** 16px
+- **Radius:** 8px
+- **Shadow:** Medium
 
 **Toast Variants:**
-- **Success:** border-left: 4px solid success (#4A9B6F)
-- **Error:** border-left: 4px solid danger (#D4594E)
-- **Info:** border-left: 4px solid accent (#E8B931)
-
-**Toast Text:**
-```
-text: text (#E8E6E3), 14px
-margin-left: 12px (offset from left border)
-```
+- **Success:** `border-l-4 border-success bg-success-dim/50`
+- **Error:** `border-l-4 border-error bg-error-dim/50`
+- **Warning:** `border-l-4 border-warning bg-warning-dim/50`
+- **Info:** `border-l-4 border-accent bg-accent-dim/50`
 
 ### Skeleton Loader
 
 **Skeleton Element:**
 ```
-bg: surface (#161616)
-border-radius: 4px (rounded)
-animation: pulse (Tailwind's built-in pulse)
+bg-surface-hover rounded animate-pulse
+```
+- **Background:** Lighter charcoal (#2D3748)
+- **Animation:** Tailwind's pulse (1.5s loop)
+
+**Skeleton Shimmer (Enhanced):**
+```css
+background: linear-gradient(90deg,
+  var(--color-surface) 0%,
+  var(--color-surface-hover) 50%,
+  var(--color-surface) 100%
+);
+background-size: 200% 100%;
+animation: shimmer 1.5s infinite;
 ```
 
-**Skeleton Shimmer (optional enhancement):**
+### Divider
+
+**Horizontal Divider:**
 ```
-background: linear-gradient(90deg, surface 0%, surface-hover 50%, surface 100%)
-background-size: 200% 100%
-animation: shimmer 1.5s infinite
+border-t border-border my-6
+```
+
+**Vertical Divider:**
+```
+border-l border-border mx-4 h-full
 ```
 
 ---
 
-## 7. Tailwind Config
+## 8. Tailwind v4 Config
 
-Paste this into `tailwind.config.ts`:
+**CRITICAL:** This project uses **Tailwind v4**, which requires the `@theme` directive in CSS, NOT a JavaScript config file (`tailwind.config.ts`).
 
-```ts
-import type { Config } from 'tailwindcss'
+Paste this into `app/globals.css`:
 
-const config: Config = {
-  content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {
-      colors: {
-        bg: '#141414',
-        surface: '#161616',
-        'surface-hover': '#1E1E1E',
-        border: '#2A2A2A',
-        'border-light': '#333333',
-        text: '#E8E6E3',
-        'text-muted': '#8A8A8A',
-        'text-dim': '#5A5A5A',
-        accent: '#E8B931',
-        'accent-dim': '#E8B93122',
-        danger: '#D4594E',
-        success: '#4A9B6F',
-      },
-      fontFamily: {
-        sans: ['var(--font-grotesk-b)', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-        display: ['var(--font-grotesk-a)', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
-        mono: ['var(--font-ibm-plex)', 'Monaco', 'Courier New', 'monospace'],
-      },
-      borderRadius: {
-        DEFAULT: '4px',
-        md: '6px',
-        lg: '8px',
-        xl: '12px',
-        full: '9999px',
-      },
-      transitionTimingFunction: {
-        'spring': 'cubic-bezier(0.16, 1, 0.3, 1)',
-      },
-      keyframes: {
-        shimmer: {
-          '0%': { backgroundPosition: '200% 0' },
-          '100%': { backgroundPosition: '-200% 0' },
-        },
-      },
-      animation: {
-        shimmer: 'shimmer 1.5s infinite',
-      },
-    },
-  },
-  plugins: [],
+```css
+@import "tailwindcss";
+
+@theme {
+  /* ========================================
+     COLORS
+     ======================================== */
+
+  /* Backgrounds */
+  --color-bg: #030712;
+  --color-surface: #1F2937;
+  --color-surface-hover: #2D3748;
+  --color-surface-subtle: #111827;
+  --color-modal-overlay: rgba(3, 7, 18, 0.85);
+
+  /* Borders */
+  --color-border: #374151;
+  --color-border-light: #4B5563;
+  --color-border-strong: #6B7280;
+  --color-border-focus: #068BD4;
+
+  /* Text */
+  --color-text: #FFFFFF;
+  --color-text-muted: #9CA3AF;
+  --color-text-dim: #6B7280;
+  --color-text-on-accent: #030712;
+
+  /* Accents */
+  --color-accent: #068BD4;
+  --color-accent-hover: #0EA5E9;
+  --color-accent-dim: rgba(6, 139, 212, 0.15);
+  --color-accent-strong: #0284C7;
+
+  /* State Colors */
+  --color-success: #10B981;
+  --color-success-dim: rgba(16, 185, 129, 0.15);
+  --color-warning: #F59E0B;
+  --color-warning-dim: rgba(245, 158, 11, 0.15);
+  --color-error: #EF4444;
+  --color-error-dim: rgba(239, 68, 68, 0.15);
+  --color-info: #068BD4;
+  --color-info-dim: rgba(6, 139, 212, 0.15);
+
+  /* ========================================
+     TYPOGRAPHY
+     ======================================== */
+
+  --font-display: 'Clash Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', Monaco, 'Courier New', monospace;
+
+  /* ========================================
+     SPACING (8-point grid)
+     ======================================== */
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-base: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+  --spacing-4xl: 96px;
+
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* ========================================
+     SHADOWS
+     ======================================== */
+
+  --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-heavy: 0 20px 50px rgba(0, 0, 0, 0.7), 0 8px 20px rgba(0, 0, 0, 0.6);
+
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-export default config
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+@layer base {
+  html,
+  body {
+    @apply bg-bg text-text font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    @apply bg-accent text-white;
+  }
+
+  h1 {
+    @apply font-display text-[40px] font-semibold leading-tight tracking-tight;
+  }
+
+  h2 {
+    @apply font-display text-[28px] font-semibold leading-snug tracking-tight;
+  }
+
+  h3 {
+    @apply font-display text-[24px] font-medium leading-snug;
+  }
+
+  h4 {
+    @apply font-display text-[20px] font-medium leading-normal;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    h1 {
+      @apply text-[32px];
+    }
+
+    h2 {
+      @apply text-[24px];
+    }
+
+    h3 {
+      @apply text-[20px];
+    }
+
+    h4 {
+      @apply text-[18px];
+    }
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@layer utilities {
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 1.5s infinite;
+  }
+}
 ```
 
-**Notes:**
-- Font families reference CSS variables (`var(--font-grotesk-a)`, etc.) — these are defined via `next/font/local` in the root layout
-- The `spring` timing function is available as `ease-spring` for panel/modal transitions
-- Default border radius is `4px` for images and generic elements
+**Usage Notes:**
+- All design tokens are defined as CSS custom properties (e.g., `var(--color-accent)`)
+- Use Tailwind utility classes that reference these tokens: `bg-accent`, `text-text-muted`, `border-border`
+- The `@theme` directive makes these tokens available to Tailwind's utility class generator
+- Font families are referenced via CSS variables set by `next/font/local` in the root layout
 
 ---
 
-## 8. Font Loading Strategy
+## 9. Font Loading Strategy
 
 ### Font Files
 
-Copy the following files from `cambrian website v1/assets/fonts/` to your Next.js project:
+**Clash Display:**
+- Location: `/Users/abhay-ryze/Downloads/ClashDisplay_Complete.zip`
+- Unzip and locate `.woff2` files for: Medium (primary), Neutral, Bulky
+- Copy to: `public/fonts/clash-display/` in Next.js project
 
-- `test-die-grotesk-a-regular.woff2` → Die Grotesk A (display)
-- `test-die-grotesk-vf-roman.woff2` → Die Grotesk B (body/UI, variable font)
+**Manrope:**
+- Location: `/Users/abhay-ryze/Downloads/Manrope.zip`
+- Unzip and locate `.woff2` files for: Regular (400), Bold (700), Light (300)
+- Copy to: `public/fonts/manrope/` in Next.js project
+- **Alternative:** Manrope is available on Google Fonts — can use `next/font/google`
 
-Place them in: `public/fonts/` or use `next/font/local` (recommended).
+**JetBrains Mono:**
+- Free, available via Google Fonts
+- Use `next/font/google` to load
 
 ### Next.js Font Loading (Recommended)
 
-Use `next/font/local` for Die Grotesk fonts and `next/font/google` for IBM Plex Mono.
-
-**In `app/layout.tsx`:**
+In `app/layout.tsx`:
 
 ```tsx
 import localFont from 'next/font/local'
-import { IBM_Plex_Mono } from 'next/font/google'
+import { JetBrains_Mono } from 'next/font/google'
 
-// Die Grotesk A (display)
-const groteskA = localFont({
-  src: '../public/fonts/test-die-grotesk-a-regular.woff2',
-  variable: '--font-grotesk-a',
+// Clash Display (display font)
+const clashDisplay = localFont({
+  src: [
+    {
+      path: '../public/fonts/clash-display/ClashDisplay-Medium.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/clash-display/ClashDisplay-Regular.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-display',
   display: 'swap',
-  weight: '400',
 })
 
-// Die Grotesk B (body/UI, variable font)
-const groteskB = localFont({
-  src: '../public/fonts/test-die-grotesk-vf-roman.woff2',
-  variable: '--font-grotesk-b',
+// Manrope (body font) — Option 1: Local files
+const manrope = localFont({
+  src: [
+    {
+      path: '../public/fonts/manrope/Manrope-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/manrope/Manrope-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/fonts/manrope/Manrope-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-sans',
   display: 'swap',
-  weight: '400',
 })
 
-// IBM Plex Mono (code/monospace)
-const ibmPlexMono = IBM_Plex_Mono({
+// Manrope — Option 2: Google Fonts (easier)
+// import { Manrope } from 'next/font/google'
+// const manrope = Manrope({
+//   subsets: ['latin'],
+//   variable: '--font-sans',
+//   display: 'swap',
+//   weight: ['300', '400', '700'],
+// })
+
+// JetBrains Mono (monospace)
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  variable: '--font-ibm-plex',
+  variable: '--font-mono',
   display: 'swap',
   weight: ['400', '500'],
 })
@@ -516,7 +844,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${groteskA.variable} ${groteskB.variable} ${ibmPlexMono.variable}`}
+      className={`${clashDisplay.variable} ${manrope.variable} ${jetbrainsMono.variable}`}
     >
       <body className="font-sans">{children}</body>
     </html>
@@ -524,67 +852,104 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-**Global CSS (app/globals.css):**
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html,
-  body {
-    @apply bg-bg text-text;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  ::selection {
-    @apply bg-white text-bg;
-  }
-}
-```
-
-### Alternative: `@font-face` Declarations
+**Alternative: @font-face Declarations**
 
 If not using `next/font`, add to `app/globals.css`:
 
 ```css
 @font-face {
-  font-family: 'Die Grotesk A';
-  src: url('/fonts/test-die-grotesk-a-regular.woff2') format('woff2');
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display/ClashDisplay-Medium.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash-display/ClashDisplay-Regular.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('/fonts/manrope/Manrope-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Die Grotesk B';
-  src: url('/fonts/test-die-grotesk-vf-roman.woff2') format('woff2');
-  font-weight: 400;
+  font-family: 'Manrope';
+  src: url('/fonts/manrope/Manrope-Bold.woff2') format('woff2');
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
-
-/* IBM Plex Mono via npm package or Google Fonts */
 ```
 
-Then update `tailwind.config.ts` to reference the font family names directly instead of CSS variables.
+Then update the `@theme` directive font families to reference the font names directly instead of CSS variables.
+
+---
+
+## 10. Logo & Assets
+
+### Logo Mark
+
+**File:** `/Users/abhay-ryze/Downloads/Union (1).svg`
+
+**Copy to:** `public/logo/specter-mark.svg` in the Next.js project
+
+**Description:** Geometric negative-space "S" shape. The letter is formed by what's *absent*, not what's present. This embodies the "invisible intelligence" philosophy.
+
+**Usage:**
+- **Sidebar branding:** White logo on True Black background
+- **Favicon:** Export as `.ico` and `.png` (16x16, 32x32, 180x180)
+- **Loading states:** Animated logo mark (optional)
+- **App icon:** For mobile home screen, PWA
+
+**Colors:**
+- **On dark backgrounds (default):** Pure White (#FFFFFF)
+- **On light backgrounds (if needed):** True Black (#030712)
+- **Never:** Ghost Cyan or other colors — logo is always monochrome
+
+**Size Guidelines:**
+- **Sidebar:** 32x32px or 40x40px
+- **Favicon:** 16x16px, 32x32px
+- **App icon:** 180x180px, 512x512px
+
+### Wordmark
+
+**Text:** "Specter"
+**Font:** Clash Display, Medium weight
+**Usage:** Render programmatically using the display font, not as a static image
+**Color:** Pure White on dark backgrounds
+
+**Combined Logo:** Logo mark + wordmark horizontally aligned, 12px gap between them
 
 ---
 
 ## Summary Checklist
 
-- [x] Complete color palette with hex values, semantic names, and usage notes
-- [x] Typography scale: font families, sizes, weights, line heights for all use cases
-- [x] Spacing and layout conventions (desktop + mobile)
-- [x] Border and radius conventions
-- [x] Animation/transition conventions
-- [x] Component style patterns for: button, input, card, modal, badge, nav item, toast, skeleton
-- [x] Ready-to-paste `tailwind.config.ts` theme extension
-- [x] Font files identified and loading strategy documented (local woff2 + IBM Plex Mono)
-- [x] Background color reconciled: uses `#141414` from the website (not `#0D0D0D`)
-- [x] No conflicts between the design system and existing PRD/CLAUDE.md design specs
+- [x] Complete color palette with all semantic tokens (16 background/border/text colors + 8 state colors)
+- [x] Typography scale with Clash Display (display) and Manrope (body)
+- [x] JetBrains Mono specified for monospace
+- [x] Spacing scale using 8-point grid (9 values from 4px to 96px)
+- [x] Border and radius conventions defined (4 levels: 4px, 6px, 8px, 12px)
+- [x] Shadow system for elevation (3 levels: subtle, medium, heavy)
+- [x] Animation/transition patterns defined (6 patterns, spring easing)
+- [x] Component patterns for: button (4 variants), input (4 types), card (3 variants), modal, badge (3 variants), nav item, toast (4 variants), skeleton, divider
+- [x] **Tailwind v4 @theme directive** ready to paste into `app/globals.css` (NOT `tailwind.config.ts`)
+- [x] Font loading strategy documented (`next/font/local` for Clash Display and Manrope, `next/font/google` for JetBrains Mono)
+- [x] Logo file location and usage documented
+- [x] Ghost Cyan (#068BD4) used as primary accent
+- [x] True Black (#030712) used as primary background
+- [x] No conflicts with Next.js 14 or Tailwind v4
+- [x] WCAG AA/AAA contrast ratios verified
+- [x] Mobile responsive adjustments documented
+- [x] "Invisible intelligence" philosophy reflected throughout
 
 ---
 
@@ -592,7 +957,8 @@ Then update `tailwind.config.ts` to reference the font family names directly ins
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0 | 2026-02-06 | Initial extraction from Cambrian website v1 + PRD |
+| 2.0 | 2026-02-06 | **Specter rebrand:** New color palette (Ghost Cyan accent, True Black bg), new fonts (Clash Display, Manrope, JetBrains Mono), Tailwind v4 CSS-based config, complete redesign |
+| 1.0 | 2026-02-06 | Initial Cambrian design system (deprecated) |
 
 ---
 

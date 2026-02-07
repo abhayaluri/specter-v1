@@ -83,12 +83,15 @@ For V1: These are two distinct system prompts in one `/api/chat` route, NOT sepa
 | Mode selection | User explicitly selects Explore or Draft — no auto-detection, no keyword heuristics | 2026-02-06 |
 | Brief handoff | No structured `<brief>` tags — full conversation context passed to Draft mode | 2026-02-06 |
 | ivfflat index | Commented out for V1 (exact search fast at small scale) | 2026-02-06 |
+| Tailwind config | Tailwind v4 CSS-based (@theme directive), NOT JS config. Use CSS custom properties (var(--color-bg)) in stylesheets. | 2026-02-06 |
+| Brand rebrand | Specter (from Cambrian). Ghost Cyan #068BD4, True Black #030712, Clash Display + Manrope + JetBrains Mono | 2026-02-06 |
+| shadcn/ui | YES — add shadcn/ui with Tailwind v4 native support (no downgrade). Task 4.5 created. Token names migrate to shadcn convention (--primary = Ghost Cyan, --accent = neutral hover). | 2026-02-06 |
 
 ---
 
 ## Current Status
 
-**Phase:** Phase 0 (Foundation) IN PROGRESS
+**Phase:** Phase 1 (Auth & Layout) COMPLETE → Phase 2 (Data Layer & CRUD) READY
 
 **What's done:**
 - Created project folder, moved and renamed 3 source docs from Downloads
@@ -103,19 +106,50 @@ For V1: These are two distinct system prompts in one `/api/chat` route, NOT sepa
 - Created `orchestrator.md` for orchestrator continuity across sessions
 - Updated MEMORY.md to auto-load orchestrator context
 - **Architecture simplification:** Reconciled all docs from three-agent pipeline to two-mode architecture (Explore + Draft). Killed auto mode detection, `<brief>` tag parsing, keyword heuristics. Collapsed Task 8 from 5 sub-tasks (8a-8e) to 3 (8a-8c). Renamed synthesis_model/drafting_model → explore_model/draft_model. Removed conversation_mode/current_brief/retrieved_source_ids columns. All 4 project docs now aligned on two-mode architecture.
-- **Task briefs written:** Task 0 (Design System) and Task 2 (Supabase Setup) briefs in `task-briefs/`
+- **Task briefs written:** Task 0 (Design System — Specter rebrand), Task 1 (Project Scaffolding), Task 1.5 (Specter Rebrand Implementation), Task 2 (Supabase Setup), Task 2.5 (pgvector & Embeddings), Task 3 (Authentication Flow), Task 4 (Layout Shell & Navigation), Task 4.5 (shadcn/ui Setup & Design Token Integration) briefs in `task-briefs/`
 - **Doc fixes:** PRD font corrected (Die Grotesk A/B), `include_all_buckets` default flipped to `true`, `mode` column clarified as "last-used mode for UI restoration"
+- **Task 0 COMPLETE (REBRAND):** `design-system.md` completely rewritten for Specter brand. Ghost Cyan accent (#068BD4), True Black bg (#030712), Clash Display + Manrope fonts. Full semantic color system (24 tokens), typography scale, spacing (8-point grid), component patterns (9 types), Tailwind v4 @theme config, font loading strategy. Replaces initial Cambrian design system.
 - **Task 2 COMPLETE:** Supabase project live (fbjtjhyvuhcebyomvmsa, us-east-1). All 8 tables, RLS, triggers, match_sources(), pgvector, auth, 2 users — all verified. `.env.local` populated.
-- **Task 0 COMPLETE:** `design-system.md` created. Full color palette (15 tokens, #141414 bg), typography scale (12 elements, Die Grotesk A/B + IBM Plex Mono), spacing (8-point), borders (6-12px radii), animations (6 patterns), component patterns (9 types with Tailwind classes), ready-to-paste Tailwind config, font loading strategy.
+- **Task 1 COMPLETE:** Full Next.js 14 foundation built by Sonnet 4.5 builder agent. 57 files, 11,018 lines. Design system integrated (Tailwind config, fonts, colors), complete type system, folder structure, shared components. `pnpm dev` runs clean, TypeScript zero errors, git committed.
+- **Task 3 COMPLETE:** Authentication flow implemented. Supabase clients (browser + server), auth middleware, login/signup page, logout, session management, route protection. Profile auto-creation verified. **Critical fix:** Migrated to Tailwind v4 CSS-based config (@theme directive). Commit 29905de, 8 files, 366 insertions.
+- **Task 2.5 COMPLETE:** OpenAI embedding pipeline implemented. lib/embeddings.ts (embedText, embedBatch, truncation), /api/embed route (single/batch), test scripts (pnpm test:embeddings), backfill utility. All 3 tests passing, semantic search verified (52.4% similarity match via match_sources()). Commit 22c38b6, 5 files, 733 insertions.
+- **Task 4 COMPLETE:** Layout shell & navigation. Sidebar with nav items (Inbox, Buckets, Conversations, Drafts, Settings), TopBar with user display, AppShell wrapper, responsive mobile menu, route highlighting, custom icons. 11 files, 410 insertions. Commit 3513296.
+- **Task 1.5 + 4.5 COMPLETE (combined):** Specter rebrand + shadcn/ui setup in single session. Fonts swapped (Clash Display + Manrope + JetBrains Mono), logo copied, globals.css rewritten to `:root` + `@theme inline` shadcn pattern, all 11 components migrated to shadcn token names (bg-primary = Ghost Cyan, bg-background = True Black, bg-card = Charcoal, bg-accent = hover gray). tw-animate-css + lucide-react + class-variance-authority installed. Button component added. Build clean, tsc clean. Commit 8d0ccdc.
 
-**What's next:**
-- **IN PROGRESS:** Task 1 (Project Scaffolding) — builder agent currently executing
-- **THEN:** Task 3 (Auth) — depends on Task 1 completing
-- **PARALLEL after Task 4:** Task 5 (Settings) + Task 6 (Source Capture)
-- Abhay needs to: get Anthropic API key (before Task 8), get OpenAI API key (before Task 2.5)
+**What's next (SESSION 9 — MORNING PLAN):**
+
+**Step 1: Visual polish (quick win)**
+- Read `task-briefs/visual-polish-improvements.md` — it's a standalone builder brief
+- Spin up a Sonnet builder to execute it (~30 min). Covers: typography tightening, sidebar contrast, card shadows/hover states, Ghost Cyan accent on nav, dramatic hero heading
+- This makes the app look and feel like Specter before building real features on top
+
+**Step 2: Content & data discovery interview**
+- Before writing Task 5 + 6 briefs, the orchestrator MUST ask Abhay a series of questions to understand:
+  - **Source types in practice:** What does Abhay actually capture day-to-day? Twitter threads, podcast timestamps, article highlights, meeting notes, voice memos? What's the most common?
+  - **Example sources:** Can Abhay provide 5-10 real example sources (notes, links, clips) so the builder agent can seed the inbox with realistic test data?
+  - **Voice profile content:** What does Abhay's personal voice sound like? What are the rules? (e.g., "Never use buzzwords", "Always use concrete examples", "Write like Paul Graham") What about Srikar's voice? Company voice?
+  - **Platform priorities:** Which platforms matter most right now? LinkedIn first? Twitter/X? Long-form? What formats do they publish in?
+  - **Bucket structure:** What thematic buckets would Abhay create? (e.g., "AI Infrastructure", "Founder Stories", "Market Analysis") — this helps Task 7 later
+  - **Content workflow today:** How does Abhay currently go from idea → published content? What's the biggest bottleneck? What does "faster" mean concretely?
+  - **Model preferences:** Default Opus for Explore and Sonnet for Draft? Any preferences on model versions?
+  - **API key situation:** Does Abhay have an Anthropic API key yet? (Needed for Task 8)
+- This interview ensures Tasks 5, 6, and 7 briefs are grounded in real workflows, not hypothetical ones
+
+**Step 3: Write Task 5 + 6 briefs**
+- Incorporate answers from the interview into detailed briefs
+- Task 5 (Settings): Include realistic voice profile examples, platform configs
+- Task 6 (Source Capture): Include example sources as seed data, realistic content types
+- Both briefs should be rich enough that builder agents create a product that feels real, not generic
+
+**Step 4: Execute Tasks 5 + 6 in parallel**
+- Both are Sonnet-grade builder tasks
+- Task 5: Settings page (API key, voice profiles, model selection)
+- Task 6: Source Capture (modal, inbox, CRUD, auto-embedding)
+
+- Abhay needs to: get Anthropic API key (before Task 8)
 
 **Blocked on:**
-- Nothing critical. Task 1 in progress. API keys not needed until later tasks.
+- Nothing. Visual polish is ready. Tasks 5 and 6 need briefs (depends on Abhay interview).
 
 ---
 
@@ -123,14 +157,16 @@ For V1: These are two distinct system prompts in one `/api/chat` route, NOT sepa
 
 | Task | Name | Status | Notes |
 |------|------|--------|-------|
-| 0 | Design System Extraction | COMPLETE | design-system.md created |
-| 1 | Project Scaffolding | IN PROGRESS | Builder agent executing |
+| 0 | Design System Extraction | COMPLETE | Specter rebrand — Ghost Cyan, True Black, Clash Display + Manrope |
+| 1 | Project Scaffolding | COMPLETE | 57 files, 11,018 lines, committed (cba3ab6) |
+| 1.5 | Specter Rebrand Implementation | COMPLETE | Combined with 4.5 — fonts, logo, colors, branding (8d0ccdc) |
 | 2 | Supabase Database Setup | COMPLETE | Supabase live (fbjtjhyvuhcebyomvmsa, us-east-1) |
-| 2.5 | pgvector & Embedding Pipeline | NOT STARTED | Depends on 1, 2 |
-| 3 | Authentication Flow | NOT STARTED | Depends on 1, 2 |
-| 4 | Layout Shell & Navigation | NOT STARTED | Depends on 3 |
-| 5 | Settings (API Key + Voice + Models) | NOT STARTED | Depends on 4 |
-| 6 | Source Capture & Inbox | NOT STARTED | Depends on 4, 2.5 |
+| 2.5 | pgvector & Embedding Pipeline | COMPLETE | 5 files, 733 lines, semantic search tested (22c38b6) |
+| 3 | Authentication Flow | COMPLETE | 8 files, 366 lines, Tailwind v4 migration (29905de) |
+| 4 | Layout Shell & Navigation | COMPLETE | 11 files, 410 lines, sidebar + topbar + mobile (3513296) |
+| 4.5 | shadcn/ui Setup & Design Token Integration | COMPLETE | Combined with 1.5 — shadcn tokens, Button component (8d0ccdc) |
+| 5 | Settings (API Key + Voice + Models) | NOT STARTED | READY — deps complete (4.5) |
+| 6 | Source Capture & Inbox | NOT STARTED | READY — deps complete (4.5, 2.5) |
 | 7 | Bucket Management | NOT STARTED | Depends on 6 |
 | 8a | Explore Mode (Retrieval + Synthesis) | NOT STARTED | Depends on 2.5, 5 |
 | 8b | Draft Mode | NOT STARTED | Depends on 5 |
@@ -148,9 +184,8 @@ For V1: These are two distinct system prompts in one `/api/chat` route, NOT sepa
 ## Abhay Action Items
 
 - [x] ~~Set up Supabase project~~ — DONE (2026-02-06)
+- [x] ~~Get OpenAI API key for embeddings~~ — DONE (2026-02-06, Task 2.5 complete)
 - [ ] Get Anthropic API key (needed before Task 8)
-- [ ] Get OpenAI API key for embeddings (needed before Task 2.5)
-- [ ] Optionally share Srikar's prototype JS file (helpful for Task 0)
 
 ---
 
@@ -189,6 +224,11 @@ When you hear one of these, do the following:
 | 2026-02-06 | Session 1 | Created project folder. Moved/renamed 3 docs. Absorbed all docs. Established orchestrator role + system (orchestrator plans, Abhay spins up builder agents, code review agent checks). Master plan v1 (16 tasks). Reviewed doc-changes v1 (two-model) and v2 (three-agent pipeline). Applied all v2 changes: PRD (7 edits), architecture (12 edits), CLAUDE.md (7 edits) via 3 parallel agents. Rewrote master plan v2: 20 tasks, 5 phases, three-agent pipeline, Task 2.5 embeddings, Task 8→8a-8e. Verified all changes. Created orchestrator.md for immortality. **Next orchestrator: write Task 0 and Task 2 briefs.** |
 | 2026-02-06 | Session 2 | **Architecture simplification.** Reconciled all 5 docs (PRD, architecture, CLAUDE.md, master plan, orchestrator) from three-agent pipeline to two-mode architecture per updated architecture summary. Changes: killed auto mode detection / keyword heuristics / mode-detector.ts, killed `<brief>` tag parsing and structured brief extraction, replaced three modes (Retrieval/Synthesis/Drafting) with two (Explore/Draft), removed conversation_mode/current_brief/retrieved_source_ids DB columns, removed lib/claude/agents/ directory, renamed synthesis_model/drafting_model → explore_model/draft_model, collapsed Task 8 from 5 sub-tasks (8a-8e) to 3 (8a-8c: Explore Mode, Draft Mode, Chat Router). Cross-doc consistency verified. **Next orchestrator: write Task 0 and Task 2 briefs.** |
 | 2026-02-06 | Session 3 | Task 0 and Task 2 briefs written. Task 0 (Design System) executed and COMPLETE — design-system.md delivered. Task 2 (Supabase Setup) executed and COMPLETE — supabase-setup-guide.md delivered, .env.local populated, database live with all tables/RLS/triggers. Task 1 brief written. **Task 1 (Project Scaffolding) IN PROGRESS — builder agent executing.** |
+| 2026-02-06 | Session 4 | **Task 1 COMPLETE.** Sonnet 4.5 builder agent delivered full Next.js 14 foundation in single session (~30 min): 57 files, 11,018 lines, design system integrated (Tailwind config + fonts), complete type system, folder structure, shared components. Validated: pnpm dev runs clean, TypeScript zero errors, git committed. **Embedding provider decision:** Confirmed OpenAI text-embedding-3-small (Cohere requires enterprise sales). **Next orchestrator: Write Task 3 brief (Auth) — highest priority, critical path. Task 2.5 (Embeddings) also unblocked, can run parallel.** |
+| 2026-02-06 | Session 5 | Task 3 brief (Auth) written. Task 2.5 brief (Embeddings) written in parallel. **Task 3 COMPLETE.** Sonnet 4.5 delivered full auth system: Supabase clients, middleware, login/signup, session management. 8 files, 366 insertions, commit 29905de. **Tailwind v4 discovery:** CSS-based config required. **Task 2.5 COMPLETE.** Sonnet 4.5 delivered OpenAI embedding pipeline: lib/embeddings.ts, /api/embed route, test scripts. Semantic search tested (52.4% match via match_sources()). 5 files, 733 insertions, commit 22c38b6. **Next orchestrator: Write Task 4 brief (Layout Shell) — critical path.** |
+| 2026-02-06 | Session 6 | Task 4 brief (Layout Shell) written. **SPECTER REBRAND INITIATED.** Reviewed Specter brand guidelines (Ghost Cyan #068BD4, True Black #030712, Clash Display + Manrope fonts). Task 0 re-executed for Specter — design-system.md completely rewritten (966 lines, 24 color tokens, full Tailwind v4 @theme config). Task 1.5 brief (Specter Rebrand Implementation) written for applying rebrand to codebase. Font files confirmed in Downloads (ClashDisplay_Complete.zip, Manrope.zip, Union.svg logo). **Next orchestrator: Execute Task 1.5 (rebrand), then Task 4 (Layout Shell).** |
+| 2026-02-06 | Session 7 | **shadcn/ui decision: YES.** Reviewed `shadcn-ui-decision.md`, researched current state — shadcn/ui now has full Tailwind v4 native support (no downgrade needed). Decision: add shadcn/ui. Created Task 4.5 brief (`task-briefs/task-4.5-shadcn-ui-setup.md`) — installs tw-animate-css + lucide-react + class-variance-authority, creates components.json, rewrites globals.css to `:root` + `@theme inline` pattern, migrates all token names to shadcn convention (--primary = Ghost Cyan, --accent = neutral hover gray), adds Button for validation. Updated master-implementation-plan.md (Task 4.5 section, dependency graph with 1.5→4→4.5, Progress Tracker, Decisions Log). Updated orchestrator.md (Resolved Decisions, Task Status, What's Next). Updated MEMORY.md. **Next orchestrator: Execute Task 1.5 (Specter Rebrand), then Task 4 (Layout Shell), then Task 4.5 (shadcn/ui).** *"The details are not the details. They make the design."* — Charles Eames |
+| 2026-02-06 | Session 8 | **Catch-up & status sync.** Discovered Task 4 was already committed (3513296) but orchestrator docs not updated. Task 1.5 + 4.5 executed together by Sonnet 4.5 builder (commit 8d0ccdc) — Specter rebrand (Clash Display + Manrope + JetBrains Mono, Ghost Cyan, True Black, logo) + shadcn/ui setup (`:root` + `@theme inline`, all 11 components migrated to shadcn token names, Button added, build clean). Updated orchestrator.md + master-implementation-plan.md to reflect 8 completed tasks. Phase 0 + Phase 1 now COMPLETE. **Planned morning session:** (1) Execute visual polish from `task-briefs/visual-polish-improvements.md` (Sonnet builder). (2) Orchestrator interviews Abhay about real content workflows, example sources, voice profiles, platform priorities — to make Task 5+6 briefs grounded in reality. (3) Write Task 5+6 briefs with real data. (4) Execute both in parallel. **Next orchestrator: Start with visual polish, then ask Abhay the discovery questions in "What's next" section.** |
 
 ---
 

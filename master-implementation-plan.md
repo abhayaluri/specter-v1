@@ -37,14 +37,17 @@ Drafts (platform-specific output: LinkedIn, Twitter/X, long-form, short-form)
 ```
 Task 0  (Design System)        ──┐
 Task 1  (Project Scaffolding)  ──┤
-Task 2  (Supabase Setup)       ──┼──► Task 3 (Auth) ──► Task 4 (Layout Shell)
-                                 │                            │
-                                 │                            ├──► Task 5 (Settings)
-                                 │                            └──► Task 6 (Source Capture)
-                                 │                                       │
-Task 2.5 (Embeddings) ◄── Task 2│                              Task 7 (Buckets) ◄── Task 6
-                                 │                                       │
-                                 │    ┌──────────────────────────────────┘
+Task 2  (Supabase Setup)       ──┼──► Task 3 (Auth) ──► Task 1.5 (Rebrand) ──► Task 4 (Layout Shell)
+                                 │                                                     │
+                                 │                                              Task 4.5 (shadcn/ui)
+                                 │                                                     │
+                                 │                                              ┌──────┴──────┐
+                                 │                                              │             │
+                                 │                                        Task 5 (Settings)  Task 6 (Source Capture)
+                                 │                                                            │
+Task 2.5 (Embeddings) ◄── Task 2│                                          Task 7 (Buckets) ◄┘
+                                 │                                                  │
+                                 │    ┌─────────────────────────────────────────────┘
                                  │    │
                                  │    ▼
                                  │  Task 8: Two-Mode Chat Pipeline
@@ -125,7 +128,7 @@ These tasks CAN run in parallel:
 ---
 
 ### Task 1 — Project Scaffolding
-**Status:** IN PROGRESS
+**Status:** COMPLETE
 **Dependencies:** Task 0 (needs design system for Tailwind config)
 **Agent type:** Builder
 
@@ -206,7 +209,7 @@ lib/utils.ts (cn utility)
 ---
 
 ### Task 2.5 — pgvector & Embedding Pipeline
-**Status:** NOT STARTED
+**Status:** COMPLETE
 **Dependencies:** Task 1 (project must exist), Task 2 (Supabase must be set up with pgvector)
 **Agent type:** Builder
 
@@ -252,7 +255,7 @@ scripts/backfill-embeddings.ts (optional CLI script)
 ## Phase 1: Auth & Layout
 
 ### Task 3 — Authentication Flow
-**Status:** NOT STARTED
+**Status:** COMPLETE
 **Dependencies:** Task 1 (project must exist), Task 2 (Supabase must be set up)
 **Agent type:** Builder
 
@@ -330,11 +333,41 @@ components/ui/button.tsx (base button component)
 
 ---
 
+### Task 4.5 — shadcn/ui Setup & Design Token Integration
+**Status:** NOT STARTED
+**Dependencies:** Task 4 (layout shell must exist to migrate its tokens)
+**Agent type:** Builder
+
+**Objective:** Install and configure shadcn/ui with Tailwind v4 native support. Migrate Specter design tokens from `@theme` to shadcn's `:root` + `@theme inline` pattern. This gives Tasks 5–14 access to accessible UI primitives (Dialog, Select, Dropdown, Tabs, etc.).
+
+**Scope:**
+- Install `tw-animate-css`, `lucide-react`, `class-variance-authority`
+- Create `components.json` for shadcn CLI
+- Rewrite `app/globals.css` to shadcn variable pattern (`:root` + `@theme inline`)
+- Migrate all existing components from old token names to shadcn naming (Ghost Cyan = `--primary`, not `--accent`)
+- Add Button component via `npx shadcn@latest add button` as validation
+- Keep Specter extended tokens (success, warning, accent-hover, etc.) alongside shadcn standard ones
+
+**Key decision:** `--primary` = Ghost Cyan (#068BD4), `--accent` = neutral hover gray (#2D3748). All existing `bg-accent`/`text-accent` references change to `bg-primary`/`text-primary`.
+
+**Acceptance criteria:**
+- [ ] shadcn/ui initialized with Tailwind v4 native support
+- [ ] All components migrated to shadcn token names
+- [ ] Button component renders all 6 variants correctly
+- [ ] No TypeScript errors, no console errors
+- [ ] Specter design preserved (Ghost Cyan primary, True Black background)
+
+**Reference files:**
+- `task-briefs/task-4.5-shadcn-ui-setup.md` (detailed step-by-step brief)
+- `design-system.md` (Specter design tokens)
+
+---
+
 ## Phase 2: Data Layer & CRUD
 
 ### Task 5 — Settings Page (API Key + Voice Profiles + Model Selection)
 **Status:** NOT STARTED
-**Dependencies:** Task 4 (needs layout shell)
+**Dependencies:** Task 4.5 (needs shadcn components: Form, Switch, Select, Tabs)
 **Agent type:** Builder
 
 **Objective:** Build the settings page where users configure their Anthropic API key, edit voice profiles, and select models for the two-mode architecture.
@@ -838,14 +871,16 @@ Update all page components for loading/error/empty states
 
 | Task | Name | Status | Agent | Notes |
 |------|------|--------|-------|-------|
-| 0 | Design System Extraction | COMPLETE | Sonnet | design-system.md created |
-| 1 | Project Scaffolding | IN PROGRESS | Builder | Currently executing |
+| 0 | Design System Extraction | COMPLETE | Sonnet | Specter rebrand — design-system.md rewritten |
+| 1 | Project Scaffolding | COMPLETE | Sonnet 4.5 | 57 files, 11,018 lines (cba3ab6) |
+| 1.5 | Specter Rebrand Implementation | COMPLETE | Sonnet 4.5 | Combined with 4.5 — fonts, logo, colors, branding (8d0ccdc) |
 | 2 | Supabase Database Setup | COMPLETE | Abhay | Supabase project live (fbjtjhyvuhcebyomvmsa, us-east-1) |
-| 2.5 | pgvector & Embedding Pipeline | NOT STARTED | — | Depends on 1, 2 |
-| 3 | Authentication Flow | NOT STARTED | — | Depends on 1, 2 |
-| 4 | Layout Shell & Navigation | NOT STARTED | — | Depends on 3 |
-| 5 | Settings (API Key + Voice + Models) | NOT STARTED | — | Depends on 4 |
-| 6 | Source Capture & Inbox | NOT STARTED | — | Depends on 4, 2.5 |
+| 2.5 | pgvector & Embedding Pipeline | COMPLETE | Sonnet 4.5 | 5 files, 733 lines, semantic search tested (22c38b6) |
+| 3 | Authentication Flow | COMPLETE | Sonnet 4.5 | 8 files, 366 lines, Tailwind v4 migration (29905de) |
+| 4 | Layout Shell & Navigation | COMPLETE | Sonnet 4.5 | 11 files, 410 lines, sidebar + topbar + mobile (3513296) |
+| 4.5 | shadcn/ui Setup & Design Token Integration | COMPLETE | Sonnet 4.5 | Combined with 1.5 — shadcn tokens, Button component (8d0ccdc) |
+| 5 | Settings (API Key + Voice + Models) | NOT STARTED | — | READY — deps complete |
+| 6 | Source Capture & Inbox | NOT STARTED | — | READY — deps complete |
 | 7 | Bucket Management | NOT STARTED | — | Depends on 6 |
 | 8a | Explore Mode (Retrieval + Synthesis) | NOT STARTED | — | Depends on 2.5, 5 |
 | 8b | Draft Mode | NOT STARTED | — | Depends on 5 |
@@ -871,12 +906,14 @@ Update all page components for loading/error/empty states
 | Mode selection | User explicitly selects Explore or Draft — no auto-detection, no keyword heuristics | 2026-02-06 |
 | Brief handoff | No structured `<brief>` tags — full conversation context passed to Draft mode | 2026-02-06 |
 | ivfflat index | Commented out for V1 (exact search fast enough at small scale) | 2026-02-06 |
+| Tailwind config | Tailwind v4 CSS-based (@theme directive in globals.css), NOT JS config. Use CSS custom properties (var(--color-bg)) in stylesheets. | 2026-02-06 |
+| Brand rebrand | Specter (from Cambrian). Ghost Cyan #068BD4, True Black #030712, Clash Display + Manrope + JetBrains Mono | 2026-02-06 |
+| shadcn/ui | YES — add shadcn/ui with Tailwind v4 native support. Token naming migrates to shadcn convention (--primary = brand color, --accent = neutral hover). Task 4.5 created. | 2026-02-06 |
 
 ---
 
 ## Abhay Action Items
 
 1. ~~Set up Supabase project~~ — DONE (2026-02-06)
-2. **Get Anthropic API key** — Needed before Task 8 (chat pipeline)
-3. **Get OpenAI API key** — Needed for embeddings (Task 2.5). Cheap: ~$0.10/month.
-4. **Share Srikar's prototype** — Optional but helpful for Task 0 (design system agent)
+2. ~~Get OpenAI API key~~ — DONE (2026-02-06). Task 2.5 complete with OpenAI text-embedding-3-small.
+3. **Get Anthropic API key** — Needed before Task 8 (chat pipeline)
