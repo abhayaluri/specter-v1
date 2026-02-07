@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Bucket, Source, Draft, Conversation, BUCKET_COLORS } from '@/lib/types'
+import { useCaptureModal } from '@/components/capture/CaptureProvider'
 import { relativeTime } from '@/lib/format'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -43,6 +44,7 @@ export default function BucketDetailView({
   allBuckets,
 }: BucketDetailViewProps) {
   const router = useRouter()
+  const { captureVersion } = useCaptureModal()
   const [bucket, setBucket] = useState(initialBucket)
   const [sources, setSources] = useState(initialSources)
   const [drafts] = useState(initialDrafts)
@@ -138,6 +140,11 @@ export default function BucketDetailView({
       console.error('Refresh failed:', err)
     }
   }
+
+  // Refetch sources when capture happens (user might capture into this bucket)
+  useEffect(() => {
+    refreshSources()
+  }, [captureVersion])
 
   return (
     <div className="p-8 max-w-7xl">

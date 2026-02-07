@@ -10,7 +10,7 @@ export default function InboxView() {
   const [sources, setSources] = useState<Source[]>([])
   const [buckets, setBuckets] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const { openCapture } = useCaptureModal()
+  const { openCapture, captureVersion } = useCaptureModal()
 
   const fetchSources = async () => {
     try {
@@ -37,7 +37,7 @@ export default function InboxView() {
   useEffect(() => {
     fetchSources()
     fetchBuckets()
-  }, [])
+  }, [captureVersion])  // refetch when capture happens
 
   const handleDelete = (id: string) => {
     setSources((prev) => prev.filter((s) => s.id !== id))

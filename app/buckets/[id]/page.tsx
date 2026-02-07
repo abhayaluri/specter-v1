@@ -1,36 +1,7 @@
+import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import AppShell from '@/components/layout/AppShell'
 import BucketDetailView from '@/components/buckets/BucketDetailView'
-
-async function getBucketDetail(id: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
-
-  // Fetch bucket detail
-  const detailRes = await fetch(`${baseUrl}/api/buckets/${id}`, {
-    cache: 'no-store',
-  })
-
-  if (!detailRes.ok) {
-    notFound()
-  }
-
-  const detailData = await detailRes.json()
-
-  // Fetch all buckets for the "Move" dropdown
-  const bucketsRes = await fetch(`${baseUrl}/api/buckets`, {
-    cache: 'no-store',
-  })
-
-  const bucketsData = await bucketsRes.json()
-
-  return {
-    bucket: detailData.bucket,
-    sources: detailData.sources,
-    drafts: detailData.drafts,
-    conversations: detailData.conversations,
-    allBuckets: bucketsData.buckets ?? [],
-  }
-}
 
 export default async function BucketDetailPage({
   params,
@@ -38,16 +9,55 @@ export default async function BucketDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const data = await getBucketDetail(id)
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) notFound()
+
+  // Fetch bucket directly — no API route needed
+  const { data: bucket, error } = await supabase
+    .from('buckets')
+    .select('*')
+    .eq('id', id)
+    .single()
+
+  if (error || !bucket) notFound()
+
+  // Fetch sources in this bucket
+  const { data: sources } = await supabase
+    .from('sources')
+    .select('*')
+    .eq('bucket_id', id)
+    .order('created_at', { ascending: false })
+
+  // Fetch drafts in this bucket
+  const { data: drafts } = await supabase
+    .from('drafts')
+    .select('*')
+    .eq('bucket_id', id)
+    .order('created_at', { ascending: false })
+
+  // Fetch conversations for this bucket
+  const { data: conversations } = await supabase
+    .from('conversations')
+    .select('*')
+    .eq('bucket_id', id)
+    .order('updated_at', { ascending: false })
+
+  // Fetch all buckets (for "Move to bucket" dropdown in SourceCards)
+  const { data: allBuckets } = await supabase
+    .from('buckets')
+    .select('*')
+    .order('sort_order', { ascending: true })
 
   return (
     <AppShell>
       <BucketDetailView
-        initialBucket={data.bucket}
-        initialSources={data.sources}
-        initialDrafts={data.drafts}
-        initialConversations={data.conversations}
-        allBuckets={data.allBuckets}
+        initialBucket={bucket}
+        initialSources={sources ?? []}
+        initialDrafts={drafts ?? []}
+        initialConversations={conversations ?? []}
+        allBuckets={allBuckets ?? []}
       />
     </AppShell>
   )

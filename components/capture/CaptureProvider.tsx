@@ -5,6 +5,7 @@ import CaptureModal from './CaptureModal'
 
 interface CaptureContextValue {
   openCapture: () => void
+  captureVersion: number  // increments on every successful capture
 }
 
 const CaptureContext = createContext<CaptureContextValue | null>(null)
@@ -19,6 +20,7 @@ export function useCaptureModal() {
 
 export default function CaptureProvider({ children }: { children: React.ReactNode }) {
   const [captureOpen, setCaptureOpen] = useState(false)
+  const [captureVersion, setCaptureVersion] = useState(0)
 
   // Register Cmd+K / Ctrl+K shortcut
   useEffect(() => {
@@ -35,9 +37,13 @@ export default function CaptureProvider({ children }: { children: React.ReactNod
   const openCapture = () => setCaptureOpen(true)
 
   return (
-    <CaptureContext.Provider value={{ openCapture }}>
+    <CaptureContext.Provider value={{ openCapture, captureVersion }}>
       {children}
-      <CaptureModal open={captureOpen} onOpenChange={setCaptureOpen} />
+      <CaptureModal
+        open={captureOpen}
+        onOpenChange={setCaptureOpen}
+        onCaptureSuccess={() => setCaptureVersion(v => v + 1)}
+      />
     </CaptureContext.Provider>
   )
 }
