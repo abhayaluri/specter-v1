@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from './Sidebar'
 import TopBar from './TopBar'
+import CaptureProvider from '@/components/capture/CaptureProvider'
 
 export default async function AppShell({
   children,
@@ -25,17 +26,19 @@ export default async function AppShell({
     .single()
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar />
+    <CaptureProvider>
+      <div className="flex h-screen bg-background overflow-hidden">
+        {/* Sidebar */}
+        <Sidebar />
 
-      {/* Main content area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <TopBar user={user} profile={profile} />
-        <main className="flex-1 overflow-y-auto">
-          {children}
-        </main>
+        {/* Main content area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <TopBar user={user} profile={profile} />
+          <main className="flex-1 overflow-y-auto">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </CaptureProvider>
   )
 }

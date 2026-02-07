@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { useCaptureModal } from '@/components/capture/CaptureProvider'
 import {
   InboxIcon,
   FolderIcon,
@@ -12,6 +13,7 @@ import {
   SettingsIcon,
   MenuIcon,
   XIcon,
+  PlusIcon,
 } from './icons'
 
 const navigation = [
@@ -25,6 +27,7 @@ const navigation = [
 export default function Sidebar() {
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { openCapture } = useCaptureModal()
 
   return (
     <>
@@ -67,8 +70,22 @@ export default function Sidebar() {
           </h1>
         </div>
 
+        {/* Capture button */}
+        <div className="px-3 pt-4 pb-2">
+          <button
+            onClick={openCapture}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground rounded-md font-medium text-sm hover:bg-primary/90 transition-all duration-200"
+          >
+            <PlusIcon className="w-5 h-5" />
+            <span>Capture</span>
+          </button>
+          <p className="text-xs text-text-dim text-center mt-2">
+            Cmd+K
+          </p>
+        </div>
+
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+        <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
           {navigation.map((item) => {
             const isActive =
               pathname === item.href ||
