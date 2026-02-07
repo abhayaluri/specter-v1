@@ -4,10 +4,10 @@ export default function SettingsPage() {
   return (
     <AppShell>
       <div className="p-8">
-        <h1 className="font-display text-[32px] tracking-tight text-text mb-6">
+        <h1 className="font-display text-[32px] tracking-tight text-foreground mb-6">
           Settings
         </h1>
-        <p className="text-text-muted">Settings UI coming in Task 5</p>
+        <p className="text-muted-foreground">Settings UI coming in Task 5</p>
       </div>
     </AppShell>
   )

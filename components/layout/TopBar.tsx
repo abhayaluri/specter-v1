@@ -11,7 +11,7 @@ interface TopBarProps {
 
 export default function TopBar({ user, profile }: TopBarProps) {
   return (
-    <div className="h-16 bg-surface border-b border-border flex items-center justify-between px-6">
+    <div className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
       {/* Left side - placeholder for search or breadcrumbs */}
       <div className="flex-1">
         {/* Placeholder for search or breadcrumbs */}
@@ -20,15 +20,15 @@ export default function TopBar({ user, profile }: TopBarProps) {
       {/* Right side - User menu */}
       <div className="flex items-center gap-4">
         <div className="text-right">
-          <p className="text-sm font-medium text-text">
+          <p className="text-sm font-medium text-foreground">
             {profile?.display_name || 'User'}
           </p>
-          <p className="text-xs text-text-muted">{user.email}</p>
+          <p className="text-xs text-muted-foreground">{user.email}</p>
         </div>
 
         {/* Avatar placeholder */}
-        <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center">
-          <span className="text-sm font-medium text-accent">
+        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+          <span className="text-sm font-medium text-primary">
             {(profile?.display_name || user.email || 'U')[0].toUpperCase()}
           </span>
         </div>

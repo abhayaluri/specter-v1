@@ -25,7 +25,7 @@ export default async function AppShell({
     .single()
 
   return (
-    <div className="flex h-screen bg-bg overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Sidebar */}
       <Sidebar />
 

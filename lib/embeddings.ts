@@ -1,5 +1,5 @@
 /**
- * Embedding Pipeline for Cambrian Content Engine
+ * Embedding Pipeline for Specter Content Engine
  *
  * Overview:
  * - Uses OpenAI text-embedding-3-small (1536 dimensions)
