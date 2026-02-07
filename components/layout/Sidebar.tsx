@@ -60,9 +60,9 @@ export default function Sidebar() {
           <img
             src="/logo/specter-mark.svg"
             alt="Specter"
-            className="w-8 h-8 invert"
+            className="w-8 h-8 invert transition-transform duration-300 hover:scale-110"
           />
-          <h1 className="font-display text-lg tracking-tight text-foreground">
+          <h1 className="font-display text-xl font-semibold tracking-tight text-foreground">
             Specter
           </h1>
         </div>
@@ -80,10 +80,10 @@ export default function Sidebar() {
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all',
+                  'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-all duration-200',
                   isActive
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                    ? 'bg-primary/10 text-primary font-medium'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-accent hover:font-medium'
                 )}
               >
                 <item.icon className="w-5 h-5" />

@@ -26,7 +26,7 @@ const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-sans',
   display: 'swap',
-  weight: ['300', '400', '700'],
+  weight: ['400', '500', '600'], // Remove 300, add 500/600 for better hierarchy
 })
 
 // JetBrains Mono (monospace for code)
