@@ -1,14 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ExtractedDraft } from '@/lib/claude/parse'
+import { Draft, PLATFORM_CONFIG } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { PLATFORM_CONFIG } from '@/lib/types'
 import ReactMarkdown from 'react-markdown'
+import DraftPanel from '@/components/drafts/DraftPanel'
 
 interface DraftPreviewProps {
   draft: ExtractedDraft | null
+  conversationId: string
+  bucketId?: string | null
 }
 
 /**
@@ -21,8 +24,94 @@ interface DraftPreviewProps {
  * - Rendered markdown content
  * - Copy to clipboard button
  */
-export default function DraftPreview({ draft }: DraftPreviewProps) {
+export default function DraftPreview({ draft, conversationId, bucketId }: DraftPreviewProps) {
   const [copied, setCopied] = useState(false)
+  const [savedDraft, setSavedDraft] = useState<Draft | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [showDraftPanel, setShowDraftPanel] = useState(false)
+
+  // Check if a saved draft exists for this conversation + platform
+  useEffect(() => {
+    if (draft) {
+      checkForSavedDraft()
+    }
+  }, [draft?.platform, conversationId])
+
+  const checkForSavedDraft = async () => {
+    if (!draft) return
+
+    try {
+      const res = await fetch(
+        `/api/drafts?conversationId=${conversationId}&platform=${draft.platform}`
+      )
+      if (!res.ok) return
+
+      const data = await res.json()
+      if (data.drafts && data.drafts.length > 0) {
+        setSavedDraft(data.drafts[0])
+      } else {
+        setSavedDraft(null)
+      }
+    } catch (err) {
+      console.error('Failed to check for saved draft:', err)
+    }
+  }
+
+  const handleSaveDraft = async () => {
+    if (!draft) return
+
+    setIsSaving(true)
+    try {
+      const res = await fetch('/api/drafts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: draft.title,
+          platform: draft.platform,
+          content: draft.content,
+          conversationId,
+          bucketId: bucketId || undefined,
+        }),
+      })
+
+      if (!res.ok) throw new Error('Failed to save draft')
+
+      const data = await res.json()
+      setSavedDraft(data.draft)
+      setShowDraftPanel(true)
+    } catch (err) {
+      console.error('Failed to save draft:', err)
+      alert('Failed to save draft')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleUpdateDraft = async () => {
+    if (!draft || !savedDraft) return
+
+    setIsSaving(true)
+    try {
+      const res = await fetch(`/api/drafts/${savedDraft.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: draft.content,
+        }),
+      })
+
+      if (!res.ok) throw new Error('Failed to update draft')
+
+      const data = await res.json()
+      setSavedDraft(data.draft)
+      setShowDraftPanel(true)
+    } catch (err) {
+      console.error('Failed to update draft:', err)
+      alert('Failed to update draft')
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   if (!draft) {
     return (
@@ -50,6 +139,11 @@ export default function DraftPreview({ draft }: DraftPreviewProps) {
 
   const platformConfig = PLATFORM_CONFIG[draft.platform as keyof typeof PLATFORM_CONFIG]
 
+  // Show DraftPanel if user clicked save/update and we have a saved draft
+  if (showDraftPanel && savedDraft) {
+    return <DraftPanel draftId={savedDraft.id} onClose={() => setShowDraftPanel(false)} />
+  }
+
   return (
     <div className="h-full overflow-y-auto p-4">
       {/* Header */}
@@ -64,14 +158,35 @@ export default function DraftPreview({ draft }: DraftPreviewProps) {
             {platformConfig?.label || draft.platform}
           </Badge>
         </div>
-        <Button
-          onClick={handleCopy}
-          variant="outline"
-          size="sm"
-          className="w-full"
-        >
-          {copied ? '✓ Copied!' : 'Copy to Clipboard'}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleCopy}
+            variant="outline"
+            size="sm"
+            className="flex-1"
+          >
+            {copied ? '✓ Copied!' : 'Copy to Clipboard'}
+          </Button>
+          {savedDraft ? (
+            <Button
+              onClick={handleUpdateDraft}
+              disabled={isSaving}
+              size="sm"
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              {isSaving ? 'Updating...' : 'Update Draft'}
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSaveDraft}
+              disabled={isSaving}
+              size="sm"
+              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              {isSaving ? 'Saving...' : 'Save to Drafts'}
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Draft Content (Rendered Markdown) */}
@@ -120,10 +235,12 @@ export default function DraftPreview({ draft }: DraftPreviewProps) {
         </ReactMarkdown>
       </div>
 
-      {/* Note about saving */}
-      <div className="mt-6 p-3 bg-card border border-border rounded-lg text-xs text-muted-foreground">
-        💡 This draft is auto-saved in this conversation. Use "Save to Drafts" (coming in Task 10) to add it to your drafts list.
-      </div>
+      {/* Status Note */}
+      {savedDraft && (
+        <div className="mt-6 p-3 bg-card border border-border rounded-lg text-xs text-muted-foreground">
+          ✓ Saved to drafts. Click "Update Draft" to save new revisions, or view full draft panel for version history.
+        </div>
+      )}
     </div>
   )
 }

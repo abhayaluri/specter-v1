@@ -189,7 +189,11 @@ export default function ChatInterface({ conversation: initialConversation, initi
           {conversation.mode === 'explore' ? (
             <SourcePanel sources={retrievedSources} />
           ) : (
-            <DraftPreview draft={lastDraft} />
+            <DraftPreview
+              draft={lastDraft}
+              conversationId={conversation.id}
+              bucketId={conversation.bucket_id}
+            />
           )}
         </div>
       </div>
