@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Bucket, Source, Draft, Conversation, BUCKET_COLORS } from '@/lib/types'
+import NewConversationModal from '@/components/conversations/NewConversationModal'
 import { useCaptureModal } from '@/components/capture/CaptureProvider'
 import { relativeTime } from '@/lib/format'
 import { Button } from '@/components/ui/button'
@@ -97,23 +98,7 @@ export default function BucketDetailView({
     await updateBucket({ color })
   }
 
-  const handleStartConversation = async () => {
-    try {
-      const res = await fetch('/api/conversations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bucketId: bucket.id }),
-      })
-
-      if (!res.ok) throw new Error('Failed to create conversation')
-
-      const { conversation } = await res.json()
-      router.push(`/conversations/${conversation.id}`)
-    } catch (err) {
-      console.error('Create conversation failed:', err)
-      alert('Failed to start conversation')
-    }
-  }
+  const [isConversationModalOpen, setIsConversationModalOpen] = useState(false)
 
   const handleDeleteBucket = async () => {
     try {
@@ -259,7 +244,7 @@ export default function BucketDetailView({
           {/* Actions */}
           <div className="flex gap-2">
             <Button
-              onClick={handleStartConversation}
+              onClick={() => setIsConversationModalOpen(true)}
               className="bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Start Conversation
@@ -399,6 +384,13 @@ export default function BucketDetailView({
           </div>
         </div>
       )}
+
+      {/* New Conversation Modal */}
+      <NewConversationModal
+        open={isConversationModalOpen}
+        onOpenChange={setIsConversationModalOpen}
+        defaultBucketId={bucket.id}
+      />
     </div>
   )
 }

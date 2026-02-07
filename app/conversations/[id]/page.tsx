@@ -1,14 +1,50 @@
-import AppShell from '@/components/layout/AppShell'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { Conversation, Message } from '@/lib/types'
+import ChatInterface from '@/components/conversations/ChatInterface'
 
-export default function ConversationPage() {
+export default async function ConversationPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+
+  // Fetch conversation and messages
+  const supabase = await createClient()
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) {
+    redirect('/login')
+  }
+
+  // Fetch conversation
+  const { data: conversation, error: convError } = await supabase
+    .from('conversations')
+    .select('*')
+    .eq('id', id)
+    .eq('owner_id', user.id)
+    .single()
+
+  if (convError || !conversation) {
+    redirect('/conversations')
+  }
+
+  // Fetch messages
+  const { data: messages, error: messagesError } = await supabase
+    .from('messages')
+    .select('*')
+    .eq('conversation_id', id)
+    .order('created_at', { ascending: true })
+
+  if (messagesError) {
+    console.error('Failed to fetch messages:', messagesError)
+  }
+
   return (
-    <AppShell>
-      <div className="p-8">
-        <h1 className="font-display text-[32px] tracking-tight text-foreground mb-6">
-          Conversation
-        </h1>
-        <p className="text-muted-foreground">Chat UI coming in Task 9</p>
-      </div>
-    </AppShell>
+    <ChatInterface
+      conversation={conversation as Conversation}
+      initialMessages={(messages || []) as Message[]}
+    />
   )
 }
