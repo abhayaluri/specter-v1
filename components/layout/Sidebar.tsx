@@ -59,7 +59,10 @@ export default function Sidebar() {
         )}
       >
         {/* Logo / Title */}
-        <div className="h-16 flex items-center gap-3 px-6 border-b border-border">
+        <Link
+          href="/"
+          className="h-16 flex items-center gap-3 px-6 border-b border-border hover:bg-accent/50 transition-colors"
+        >
           <img
             src="/logo/specter-mark.svg"
             alt="Specter"
@@ -68,7 +71,7 @@ export default function Sidebar() {
           <h1 className="font-display text-xl font-semibold tracking-tight text-foreground">
             Specter
           </h1>
-        </div>
+        </Link>
 
         {/* Capture button */}
         <div className="px-3 pt-4 pb-2">

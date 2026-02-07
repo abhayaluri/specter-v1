@@ -1,6 +1,29 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+/**
+ * Generate a simple title from content (first 60-80 chars, cut at word boundary)
+ */
+function generateSimpleTitle(content: string): string {
+  if (!content) return 'Untitled'
+
+  // Remove extra whitespace and newlines
+  const cleaned = content.trim().replace(/\s+/g, ' ')
+
+  // If content is short enough, use as-is
+  if (cleaned.length <= 60) return cleaned
+
+  // Truncate at ~60-80 chars, cutting at word boundary
+  const truncated = cleaned.slice(0, 80)
+  const lastSpace = truncated.lastIndexOf(' ')
+
+  if (lastSpace > 50) {
+    return truncated.slice(0, lastSpace) + '...'
+  }
+
+  return truncated + '...'
+}
+
 export async function GET(request: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -46,14 +69,19 @@ export async function POST(request: Request) {
   // Support bulk creation (array of sources)
   const items = Array.isArray(body) ? body : [body]
 
-  const sourcesToInsert = items.map((item: any) => ({
-    content: item.content,
-    source_type: item.sourceType || 'note',
-    source_url: item.sourceUrl || null,
-    bucket_id: item.bucketId || null,
-    owner_id: user.id,
-    metadata: item.metadata || {},
-  }))
+  const sourcesToInsert = items.map((item: any) => {
+    // Auto-generate title from content if not provided
+    const autoTitle = item.title || generateSimpleTitle(item.content)
+
+    return {
+      content: item.content,
+      source_type: item.sourceType || 'note',
+      source_url: item.sourceUrl || null,
+      bucket_id: item.bucketId || null,
+      owner_id: user.id,
+      metadata: { ...item.metadata, title: autoTitle },
+    }
+  })
 
   const { data, error } = await supabase
     .from('sources')

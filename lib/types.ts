@@ -45,7 +45,10 @@ export interface Source {
   content: string;
   source_type: SourceType;
   source_url: string | null;
-  metadata: Record<string, any>;
+  metadata: {
+    title?: string;
+    [key: string]: any;
+  };
   created_at: string;
   updated_at: string;
   // Joined fields
@@ -106,6 +109,7 @@ export interface DraftVersion {
 
 export interface CreateSourceInput {
   content: string;
+  title?: string;
   sourceType: SourceType;
   sourceUrl?: string;
   bucketId?: string;

@@ -31,23 +31,29 @@ const SOURCE_TYPE_CONFIG: Record<SourceType, { label: string; color: string }> =
 
 export default function SourceCard({ source, buckets, onUpdate, onDelete }: SourceCardProps) {
   const [isEditing, setIsEditing] = useState(false)
+  const [editedTitle, setEditedTitle] = useState(source.metadata?.title || '')
   const [editedContent, setEditedContent] = useState(source.content)
   const [isSaving, setIsSaving] = useState(false)
 
   const typeConfig = SOURCE_TYPE_CONFIG[source.source_type]
+  const title = source.metadata?.title
 
   const handleSaveEdit = async () => {
-    if (editedContent === source.content) {
+    if (editedContent === source.content && editedTitle === (source.metadata?.title || '')) {
       setIsEditing(false)
       return
     }
 
     setIsSaving(true)
     try {
+      const payload: any = {}
+      if (editedContent !== source.content) payload.content = editedContent
+      if (editedTitle !== (source.metadata?.title || '')) payload.title = editedTitle
+
       const res = await fetch(`/api/sources/${source.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: editedContent }),
+        body: JSON.stringify(payload),
       })
 
       if (!res.ok) throw new Error('Failed to update source')
@@ -154,10 +160,24 @@ export default function SourceCard({ source, buckets, onUpdate, onDelete }: Sour
       {/* Content */}
       {isEditing ? (
         <div className="space-y-2">
+          {/* Title input */}
+          <div>
+            <label className="text-xs text-muted-foreground mb-1 block">
+              Title (optional)
+            </label>
+            <input
+              type="text"
+              value={editedTitle}
+              onChange={(e) => setEditedTitle(e.target.value)}
+              placeholder="Give this source a title..."
+              className="w-full px-2 py-1.5 bg-background border border-border rounded text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+          {/* Content textarea */}
           <Textarea
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
-            className="min-h-[100px]"
+            className="min-h-[100px] max-h-[300px] overflow-y-auto"
             autoFocus
           />
           <div className="flex gap-2">
@@ -168,6 +188,7 @@ export default function SourceCard({ source, buckets, onUpdate, onDelete }: Sour
               size="sm"
               variant="ghost"
               onClick={() => {
+                setEditedTitle(source.metadata?.title || '')
                 setEditedContent(source.content)
                 setIsEditing(false)
               }}
@@ -179,7 +200,12 @@ export default function SourceCard({ source, buckets, onUpdate, onDelete }: Sour
         </div>
       ) : (
         <>
-          <p className="text-sm text-foreground whitespace-pre-wrap line-clamp-3">
+          {title && (
+            <h3 className="text-base font-medium text-foreground mb-2">
+              {title}
+            </h3>
+          )}
+          <p className="text-sm text-muted-foreground whitespace-pre-wrap line-clamp-3">
             {source.content}
           </p>
           {source.source_url && (

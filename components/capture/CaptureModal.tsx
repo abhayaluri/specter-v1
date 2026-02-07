@@ -30,6 +30,7 @@ const SOURCE_TYPE_OPTIONS: { value: SourceType; label: string }[] = [
 ]
 
 export default function CaptureModal({ open, onOpenChange, onCaptureSuccess }: CaptureModalProps) {
+  const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [sourceType, setSourceType] = useState<SourceType>('note')
   const [sourceUrl, setSourceUrl] = useState('')
@@ -76,6 +77,7 @@ export default function CaptureModal({ open, onOpenChange, onCaptureSuccess }: C
           .filter(Boolean)
           .map((text) => ({
             content: text,
+            title: title || undefined,
             sourceType,
             sourceUrl: sourceUrl || undefined,
             bucketId: bucketId || undefined,
@@ -84,6 +86,7 @@ export default function CaptureModal({ open, onOpenChange, onCaptureSuccess }: C
       } else {
         payload = {
           content,
+          title: title || undefined,
           sourceType,
           sourceUrl: sourceUrl || undefined,
           bucketId: bucketId || undefined,
@@ -101,6 +104,7 @@ export default function CaptureModal({ open, onOpenChange, onCaptureSuccess }: C
       const data = await res.json()
 
       // Reset form
+      setTitle('')
       setContent('')
       setSourceUrl('')
       setSourceType('note')
@@ -131,6 +135,21 @@ export default function CaptureModal({ open, onOpenChange, onCaptureSuccess }: C
         </DialogHeader>
 
         <div className="space-y-4 mt-4">
+          {/* Title (optional) */}
+          <div>
+            <Label htmlFor="title" className="text-sm text-muted-foreground">
+              Title <span className="text-text-dim">(optional)</span>
+            </Label>
+            <input
+              id="title"
+              type="text"
+              placeholder="Give this source a title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="mt-1.5 w-full px-3 py-2 bg-background border border-border rounded-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
           {/* Content */}
           <div>
             <Label htmlFor="content" className="text-sm text-muted-foreground">
@@ -141,7 +160,7 @@ export default function CaptureModal({ open, onOpenChange, onCaptureSuccess }: C
               placeholder="What's on your mind?"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="mt-1.5 min-h-[120px] bg-background border-border"
+              className="mt-1.5 min-h-[120px] max-h-[300px] overflow-y-auto bg-background border-border"
               autoFocus
             />
           </div>

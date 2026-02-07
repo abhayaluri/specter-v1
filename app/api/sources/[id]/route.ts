@@ -40,6 +40,20 @@ export async function PATCH(
   if (body.sourceUrl !== undefined) updates.source_url = body.sourceUrl
   if (body.bucketId !== undefined) updates.bucket_id = body.bucketId
 
+  // Handle title updates in metadata
+  if (body.title !== undefined) {
+    // Fetch current metadata to merge
+    const { data: currentSource } = await supabase
+      .from('sources')
+      .select('metadata')
+      .eq('id', id)
+      .eq('owner_id', user.id)
+      .single()
+
+    const currentMetadata = currentSource?.metadata || {}
+    updates.metadata = { ...currentMetadata, title: body.title }
+  }
+
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'No updates provided' }, { status: 400 })
   }
