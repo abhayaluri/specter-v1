@@ -20,6 +20,50 @@ You are the **Orchestrator / GM** of the Cambrian Content Engine V1 project. You
 - Make architectural decisions unilaterally (propose to Abhay, let him decide)
 - Push code, run builds, or deploy
 
+---
+
+## Brief-Writing Principles
+
+Learned from Task 8a/8b builder feedback (Session 11). Calibrate brief density based on task type to balance integration correctness with builder autonomy.
+
+### The core principle
+
+**Specify the interfaces tightly, leave the internals loose.** Write the API contract (types, function signatures, protocols, file boundaries) and the acceptance tests (concrete inputs → expected outputs). The builder writes the code between those two.
+
+### Always specify (tight — these are coordination surfaces)
+- **Architecture context diagram** — Where this task fits in the system, what calls what
+- **Function signatures and return types** — The integration contract other tasks depend on
+- **File ownership** — Especially for parallel tasks. Which files belong to which agent.
+- **Protocols and formats** — Tag formats, SSE event shapes, API schemas that span multiple tasks
+- **"What This Task Does NOT Do"** — Scope boundaries. Prevents scope creep.
+- **Acceptance criteria as checklists** — Verifiable, exhaustive, no ambiguity
+
+### Leave to the builder (loose — these are implementation details)
+- **System prompt wording** — Give the sections, requirements, and constraints. Don't write it verbatim.
+- **Regex / parsing logic** — Give test cases with expected inputs/outputs instead of literal code.
+- **Step-by-step implementation code** — Describe the flow and constraints, not the code.
+- **Variable naming, JSDoc, code organization** — Builder's judgment.
+- **Error message text** — Builder's judgment.
+
+### Provide more of
+- **Concrete test cases** — Especially for pure functions. `Input: X → Expected: Y` format. 5-6 cases covers most edge cases and is worth more than a paragraph of description.
+- **Error handling guidance** — Enumerate specific errors (401, 429, network failure) and expected behavior for each. "Throw and let 8c handle" is not enough.
+- **Version / ID discrepancy notes** — When DB defaults diverge from current API model IDs, explain why and what to do.
+
+### Brief density by task type
+
+| Task type | Target length | What to include |
+|-----------|--------------|-----------------|
+| CRUD / pattern-following | ~100 lines | Objective + "follow Task N patterns" + acceptance criteria |
+| Integration-critical / parallel | ~300 lines | Tight contracts + loose internals + file ownership + test cases |
+| Architecture-novel | ~200 lines | Decision rationale + trade-offs + integration points |
+
+### Reference
+- Builder agents should read `builder-agent-guide.md` before starting. Reference it in every brief.
+- The guide explains what builders own vs. what they follow, when to deviate, and when to escalate.
+
+---
+
 ## The System
 - **Abhay** — Guide, decision-maker, spins up agents
 - **You (Orchestrator)** — GM, planning, documentation, tracking
@@ -91,65 +135,30 @@ For V1: These are two distinct system prompts in one `/api/chat` route, NOT sepa
 
 ## Current Status
 
-**Phase:** Phase 1 (Auth & Layout) COMPLETE → Phase 2 (Data Layer & CRUD) READY
+**Phase:** Phase 4 (UI Integration) — Task 10 COMPLETE, ready for parallel Tasks 11+12
 
-**What's done:**
-- Created project folder, moved and renamed 3 source docs from Downloads
-- Absorbed all project docs (PRD, architecture, CLAUDE.md)
-- Established orchestrator system: orchestrator plans/tracks, Abhay spins up separate builder agents, code review agent checks work
-- Created master implementation plan v1 (16 tasks, 5 phases)
-- Reviewed doc-changes v1 (two-model architecture) — gave feedback, proposed phased approach
-- Reviewed doc-changes v2 (three-agent pipeline) — adopted fully
-- Applied all v2 changes via 3 parallel agents: PRD (7 edits), architecture (12 edits), CLAUDE.md (7 edits)
-- Rewrote master plan v2: 20 tasks, three-agent pipeline, Task 2.5 (embeddings), Task 8 decomposed into 8a-8e sub-tasks
-- Verified all changes landed correctly across all files
-- Created `orchestrator.md` for orchestrator continuity across sessions
-- Updated MEMORY.md to auto-load orchestrator context
-- **Architecture simplification:** Reconciled all docs from three-agent pipeline to two-mode architecture (Explore + Draft). Killed auto mode detection, `<brief>` tag parsing, keyword heuristics. Collapsed Task 8 from 5 sub-tasks (8a-8e) to 3 (8a-8c). Renamed synthesis_model/drafting_model → explore_model/draft_model. Removed conversation_mode/current_brief/retrieved_source_ids columns. All 4 project docs now aligned on two-mode architecture.
-- **Task briefs written:** Task 0 (Design System — Specter rebrand), Task 1 (Project Scaffolding), Task 1.5 (Specter Rebrand Implementation), Task 2 (Supabase Setup), Task 2.5 (pgvector & Embeddings), Task 3 (Authentication Flow), Task 4 (Layout Shell & Navigation), Task 4.5 (shadcn/ui Setup & Design Token Integration) briefs in `task-briefs/`
-- **Doc fixes:** PRD font corrected (Die Grotesk A/B), `include_all_buckets` default flipped to `true`, `mode` column clarified as "last-used mode for UI restoration"
-- **Task 0 COMPLETE (REBRAND):** `design-system.md` completely rewritten for Specter brand. Ghost Cyan accent (#068BD4), True Black bg (#030712), Clash Display + Manrope fonts. Full semantic color system (24 tokens), typography scale, spacing (8-point grid), component patterns (9 types), Tailwind v4 @theme config, font loading strategy. Replaces initial Cambrian design system.
-- **Task 2 COMPLETE:** Supabase project live (fbjtjhyvuhcebyomvmsa, us-east-1). All 8 tables, RLS, triggers, match_sources(), pgvector, auth, 2 users — all verified. `.env.local` populated.
-- **Task 1 COMPLETE:** Full Next.js 14 foundation built by Sonnet 4.5 builder agent. 57 files, 11,018 lines. Design system integrated (Tailwind config, fonts, colors), complete type system, folder structure, shared components. `pnpm dev` runs clean, TypeScript zero errors, git committed.
-- **Task 3 COMPLETE:** Authentication flow implemented. Supabase clients (browser + server), auth middleware, login/signup page, logout, session management, route protection. Profile auto-creation verified. **Critical fix:** Migrated to Tailwind v4 CSS-based config (@theme directive). Commit 29905de, 8 files, 366 insertions.
-- **Task 2.5 COMPLETE:** OpenAI embedding pipeline implemented. lib/embeddings.ts (embedText, embedBatch, truncation), /api/embed route (single/batch), test scripts (pnpm test:embeddings), backfill utility. All 3 tests passing, semantic search verified (52.4% similarity match via match_sources()). Commit 22c38b6, 5 files, 733 insertions.
-- **Task 4 COMPLETE:** Layout shell & navigation. Sidebar with nav items (Inbox, Buckets, Conversations, Drafts, Settings), TopBar with user display, AppShell wrapper, responsive mobile menu, route highlighting, custom icons. 11 files, 410 insertions. Commit 3513296.
-- **Task 1.5 + 4.5 COMPLETE (combined):** Specter rebrand + shadcn/ui setup in single session. Fonts swapped (Clash Display + Manrope + JetBrains Mono), logo copied, globals.css rewritten to `:root` + `@theme inline` shadcn pattern, all 11 components migrated to shadcn token names (bg-primary = Ghost Cyan, bg-background = True Black, bg-card = Charcoal, bg-accent = hover gray). tw-animate-css + lucide-react + class-variance-authority installed. Button component added. Build clean, tsc clean. Commit 8d0ccdc.
+**What's done (cumulative):**
+- All Phase 0 + Phase 1 + Phase 2 work (see Session Log for details)
+- **Task 8a COMPLETE (Session 10):** Explore mode engine — semantic retrieval (pgvector), manual pinned sources, bucket sources, three-way deduplication, Opus streaming, source visibility metadata, auto-title generation (Haiku). Files: explore.ts, prompts.ts, client.ts, title.ts. Commit 9ce815e.
+- **Task 8b COMPLETE (Session 10):** Draft mode engine — platform-specific writing, voice profile enforcement (personal + company + platform), `<draft>` tag parsing, Sonnet streaming. Files: draft.ts, parse.ts. Commit d2df6b0.
+- **Session 11 — Meta-improvements:** Brief-Writing Principles, `builder-agent-guide.md`, `claude-code-agent-instructions.md` rewrite. Clean doc hierarchy.
+- **Task 8c COMPLETE (Session 12):** Chat Router — auth + API key decryption + voice resolution + conversation CRUD + SSE streaming + message persistence. 4 cross-review fixes applied (async params, ownership check, camelCase mapping, NextResponse.json). Commit 6f73896.
+- **Task 9 COMPLETE (Session 12):** Conversation UI — 13 files, 1,679 insertions. Split-pane chat interface, `useChatStream` SSE hook, mode toggle, source panel, draft preview, conversation list, new conversation modal, BucketDetailView integration. Commit e1b5e04.
+- **Task 10 COMPLETE (Session 13):** Draft Panel — 5 API routes (list, create, detail, update, delete), 4 components (StatusBadge, VersionList, DraftPanel, enhanced DraftPreview), version history, save/update flow, status workflow (draft → ready → published). Commit 5cb7174.
 
-**What's next (SESSION 9 — MORNING PLAN):**
+**What's next:**
 
-**Step 1: Visual polish (quick win)**
-- Read `task-briefs/visual-polish-improvements.md` — it's a standalone builder brief
-- Spin up a Sonnet builder to execute it (~30 min). Covers: typography tightening, sidebar contrast, card shadows/hover states, Ghost Cyan accent on nav, dramatic hero heading
-- This makes the app look and feel like Specter before building real features on top
+**Tasks 11+12 BRIEFS WRITTEN — READY FOR PARALLEL DISPATCH**
+- Task 11 brief: `task-briefs/task-11-draft-management-page.md` (Draft list + detail pages)
+- Task 12 brief: `task-briefs/task-12-dashboard.md` (Landing page with stats)
+- Parallel execution guide: `task-briefs/PARALLEL-EXECUTION-11-12.md`
+- **ZERO file conflicts** — Task 11 owns `app/drafts/*`, Task 12 owns `app/page.tsx`
 
-**Step 2: Content & data discovery interview**
-- Before writing Task 5 + 6 briefs, the orchestrator MUST ask Abhay a series of questions to understand:
-  - **Source types in practice:** What does Abhay actually capture day-to-day? Twitter threads, podcast timestamps, article highlights, meeting notes, voice memos? What's the most common?
-  - **Example sources:** Can Abhay provide 5-10 real example sources (notes, links, clips) so the builder agent can seed the inbox with realistic test data?
-  - **Voice profile content:** What does Abhay's personal voice sound like? What are the rules? (e.g., "Never use buzzwords", "Always use concrete examples", "Write like Paul Graham") What about Srikar's voice? Company voice?
-  - **Platform priorities:** Which platforms matter most right now? LinkedIn first? Twitter/X? Long-form? What formats do they publish in?
-  - **Bucket structure:** What thematic buckets would Abhay create? (e.g., "AI Infrastructure", "Founder Stories", "Market Analysis") — this helps Task 7 later
-  - **Content workflow today:** How does Abhay currently go from idea → published content? What's the biggest bottleneck? What does "faster" mean concretely?
-  - **Model preferences:** Default Opus for Explore and Sonnet for Draft? Any preferences on model versions?
-  - **API key situation:** Does Abhay have an Anthropic API key yet? (Needed for Task 8)
-- This interview ensures Tasks 5, 6, and 7 briefs are grounded in real workflows, not hypothetical ones
-
-**Step 3: Write Task 5 + 6 briefs**
-- Incorporate answers from the interview into detailed briefs
-- Task 5 (Settings): Include realistic voice profile examples, platform configs
-- Task 6 (Source Capture): Include example sources as seed data, realistic content types
-- Both briefs should be rich enough that builder agents create a product that feels real, not generic
-
-**Step 4: Execute Tasks 5 + 6 in parallel**
-- Both are Sonnet-grade builder tasks
-- Task 5: Settings page (API key, voice profiles, model selection)
-- Task 6: Source Capture (modal, inbox, CRUD, auto-embedding)
-
-- Abhay needs to: get Anthropic API key (before Task 8)
+**After 11+12:**
+- Remaining: 13 (Realtime) → 14 (Polish) → 15 (Deploy) — 3 tasks
 
 **Blocked on:**
-- Nothing. Visual polish is ready. Tasks 5 and 6 need briefs (depends on Abhay interview).
+- Nothing. Briefs ready, waiting for builder dispatch.
 
 ---
 
@@ -165,16 +174,17 @@ For V1: These are two distinct system prompts in one `/api/chat` route, NOT sepa
 | 3 | Authentication Flow | COMPLETE | 8 files, 366 lines, Tailwind v4 migration (29905de) |
 | 4 | Layout Shell & Navigation | COMPLETE | 11 files, 410 lines, sidebar + topbar + mobile (3513296) |
 | 4.5 | shadcn/ui Setup & Design Token Integration | COMPLETE | Combined with 1.5 — shadcn tokens, Button component (8d0ccdc) |
-| 5 | Settings (API Key + Voice + Models) | NOT STARTED | READY — deps complete (4.5) |
-| 6 | Source Capture & Inbox | NOT STARTED | READY — deps complete (4.5, 2.5) |
-| 7 | Bucket Management | NOT STARTED | Depends on 6 |
-| 8a | Explore Mode (Retrieval + Synthesis) | NOT STARTED | Depends on 2.5, 5 |
-| 8b | Draft Mode | NOT STARTED | Depends on 5 |
-| 8c | Chat Router | NOT STARTED | Depends on 8a, 8b |
-| 9 | Conversation UI | NOT STARTED | Depends on 8c, 7 |
-| 10 | Draft Panel | NOT STARTED | Depends on 9 |
-| 11 | Draft Management Page | NOT STARTED | Depends on 10 |
-| 12 | Dashboard | NOT STARTED | Depends on 7, 6, 10 |
+| 5 | Settings (API Key + Voice + Models) | COMPLETE | 12 files, 942 lines (7d12f39) |
+| 6 | Source Capture & Inbox | COMPLETE | 18 files, 1,527 lines |
+| 7 | Bucket Management | COMPLETE | CRUD, list, detail, conversation creation |
+| — | Review Fixes (Pre-Task 8) | COMPLETE | 5 HIGH fixes + .env.example (6e166bd) |
+| 8a | Explore Mode (Retrieval + Synthesis) | COMPLETE | Opus streaming, pgvector retrieval, source visibility (9ce815e) |
+| 8b | Draft Mode | COMPLETE | Sonnet streaming, voice profiles, `<draft>` tag parsing (d2df6b0) |
+| 8c | Chat Router | COMPLETE | Auth, SSE streaming, voice resolution, message persistence (6f73896) |
+| 9 | Conversation UI | COMPLETE | 13 files, 1,679 lines — split-pane chat, streaming, mode toggle (e1b5e04) |
+| 10 | Draft Panel | COMPLETE | Save/update, versions, status, CRUD (5cb7174) |
+| 11 | Draft Management Page | NOT STARTED | Brief ready, depends on 10 (COMPLETE) |
+| 12 | Dashboard | NOT STARTED | Brief ready, depends on 7, 6, 10 (COMPLETE) |
 | 13 | Realtime & Cross-User | NOT STARTED | Depends on 12 |
 | 14 | Polish & Shortcuts | NOT STARTED | Depends on 13 |
 | 15 | Deploy to Vercel | NOT STARTED | Depends on 14 |
@@ -185,7 +195,7 @@ For V1: These are two distinct system prompts in one `/api/chat` route, NOT sepa
 
 - [x] ~~Set up Supabase project~~ — DONE (2026-02-06)
 - [x] ~~Get OpenAI API key for embeddings~~ — DONE (2026-02-06, Task 2.5 complete)
-- [ ] Get Anthropic API key (needed before Task 8)
+- [x] ~~Get Anthropic API key~~ — DONE (confirmed 2026-02-07, ready for Task 8)
 
 ---
 
@@ -229,6 +239,10 @@ When you hear one of these, do the following:
 | 2026-02-06 | Session 6 | Task 4 brief (Layout Shell) written. **SPECTER REBRAND INITIATED.** Reviewed Specter brand guidelines (Ghost Cyan #068BD4, True Black #030712, Clash Display + Manrope fonts). Task 0 re-executed for Specter — design-system.md completely rewritten (966 lines, 24 color tokens, full Tailwind v4 @theme config). Task 1.5 brief (Specter Rebrand Implementation) written for applying rebrand to codebase. Font files confirmed in Downloads (ClashDisplay_Complete.zip, Manrope.zip, Union.svg logo). **Next orchestrator: Execute Task 1.5 (rebrand), then Task 4 (Layout Shell).** |
 | 2026-02-06 | Session 7 | **shadcn/ui decision: YES.** Reviewed `shadcn-ui-decision.md`, researched current state — shadcn/ui now has full Tailwind v4 native support (no downgrade needed). Decision: add shadcn/ui. Created Task 4.5 brief (`task-briefs/task-4.5-shadcn-ui-setup.md`) — installs tw-animate-css + lucide-react + class-variance-authority, creates components.json, rewrites globals.css to `:root` + `@theme inline` pattern, migrates all token names to shadcn convention (--primary = Ghost Cyan, --accent = neutral hover gray), adds Button for validation. Updated master-implementation-plan.md (Task 4.5 section, dependency graph with 1.5→4→4.5, Progress Tracker, Decisions Log). Updated orchestrator.md (Resolved Decisions, Task Status, What's Next). Updated MEMORY.md. **Next orchestrator: Execute Task 1.5 (Specter Rebrand), then Task 4 (Layout Shell), then Task 4.5 (shadcn/ui).** *"The details are not the details. They make the design."* — Charles Eames |
 | 2026-02-06 | Session 8 | **Catch-up & status sync.** Discovered Task 4 was already committed (3513296) but orchestrator docs not updated. Task 1.5 + 4.5 executed together by Sonnet 4.5 builder (commit 8d0ccdc) — Specter rebrand (Clash Display + Manrope + JetBrains Mono, Ghost Cyan, True Black, logo) + shadcn/ui setup (`:root` + `@theme inline`, all 11 components migrated to shadcn token names, Button added, build clean). Updated orchestrator.md + master-implementation-plan.md to reflect 8 completed tasks. Phase 0 + Phase 1 now COMPLETE. **Planned morning session:** (1) Execute visual polish from `task-briefs/visual-polish-improvements.md` (Sonnet builder). (2) Orchestrator interviews Abhay about real content workflows, example sources, voice profiles, platform priorities — to make Task 5+6 briefs grounded in reality. (3) Write Task 5+6 briefs with real data. (4) Execute both in parallel. **Next orchestrator: Start with visual polish, then ask Abhay the discovery questions in "What's next" section.** |
+| 2026-02-07 | Session 9 | **Phase 2 COMPLETE + Code Review.** (1) Discovery interview with Abhay — captured real workflow data: Twitter/X most frequent source, organization + synthesis is bottleneck, 5 thematic buckets, 3 voice profiles (Abhay=practitioner, Srikar=strategic, Compound=visionary), LinkedIn+Twitter/X equally, Opus/Sonnet confirmed, Anthropic API key ready. (2) Wrote Task 5+6+7 briefs grounded in interview data. (3) All three executed: Task 5 COMPLETE (Settings — 12 files, 942 lines, 7d12f39), Task 6 COMPLETE (Source Capture — 18 files, 1,527 lines), Task 7 COMPLETE (Bucket Management — CRUD, list, detail). (4) Dropped in code review agent brief, ran 3 parallel review agents covering 6 layers: stale arch (CLEAN), wiring (100% correct), security (solid), build (passes), traces (partial — embedding fire-and-forget, capture refresh gap), UI (missing error/loading states). Results: 0 Critical, 5 High, 16 Medium, 7 Low → `docs/code-review-2026-02-07.md`. (5) Wrote fix brief, all 5 HIGH issues fixed (6e166bd): bucket detail direct queries, capture refresh mechanism, env var standardization, null profile safety, conversations stub, .env.example. (6) Verified all fixes landed. **11 of 18 tasks done (61%). Phase 0+1+2 COMPLETE. Foundation reviewed and hardened. Next orchestrator: Write Task 8a + 8b briefs — the AI core.** *"First, solve the problem. Then, write the code."* — John Johnson |
+| 2026-02-07 | Session 10 | **Phase 3 AI Core: 8a+8b COMPLETE.** Wrote Task 8a + 8b briefs, executed both in parallel. Task 8a (Explore Mode) — Opus streaming, pgvector retrieval, pinned/bucket/semantic sources, three-way dedup, auto-title via Haiku. Task 8b (Draft Mode) — Sonnet streaming, voice profiles (personal+company+platform), `<draft>` tag parsing. Wrote Task 8c brief (Chat Router). UX fixes: home navigation, scrollable textarea, source titles (c9807fc). **13 of 18 tasks done (72%).** |
+| 2026-02-07 | Session 11 | **Meta-session: process improvement + doc cleanup.** Reviewed Sonnet builder feedback on Task 8b brief quality. Key insight: briefs were over-prescribing implementation (70-80% transcription work) while under-specifying error handling and test cases. Added "Brief-Writing Principles" section to orchestrator.md (tight interfaces, loose internals). Created `builder-agent-guide.md` — concise reference for builders on autonomy vs. contracts, when to deviate, when to escalate. Full rewrite of `claude-code-agent-instructions.md` — was deeply stale (still said Cambrian, Die Grotesk, amber, tailwind.config.ts, Next.js 14). Now current: Specter brand, correct tokens from globals.css, Next.js 16, Tailwind v4, shadcn/ui, 3-layer AI architecture. Verified all 8a/8b function signatures match 8c brief. Flagged: `Profile` type missing `anthropic_api_key_encrypted`. Task 8c dispatched. **Next orchestrator: Check 8c completion, write Task 9 brief.** *"Rage, rage against the dying of the light."* — Dylan Thomas |
+| 2026-02-07 | Session 12 | **Task 8c verified + Task 9 COMPLETE + Task 10 brief written.** (1) Verified Task 8c delivery — all 4 cross-review fixes landed (async params, ownership check, camelCase mapping, NextResponse.json). Commit 6f73896. (2) Wrote Task 8c brief with cross-review, Task 9 brief (~270 lines, integration-critical density), Task 10 brief (~150 lines, CRUD density). (3) Task 9 builder delivered: 13 files, 1,679 lines (commit e1b5e04). Full verification: SSE streaming with buffer handling, mode toggle with platform prompt, source panel grouped by retrieval method, draft preview with markdown rendering and clipboard, `stripDraftTags()` in MessageBubble, optimistic message appending, conversation list with filters. Minor notes: no responsive mobile handling (context panel fixed at 40%), no retry button on errors. Zero TS errors. (4) Core product loop now works: Capture → Organize → Explore → Draft. **15 of 18 tasks done (83%). Next orchestrator: Dispatch Task 10 builder, then write Tasks 11+12 briefs.** *"The brick walls are there for a reason. They're not there to keep us out. The brick walls are there to give us a chance to show how badly we want something."* — Randy Pausch |
 
 ---
 

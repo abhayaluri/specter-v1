@@ -879,14 +879,15 @@ Update all page components for loading/error/empty states
 | 3 | Authentication Flow | COMPLETE | Sonnet 4.5 | 8 files, 366 lines, Tailwind v4 migration (29905de) |
 | 4 | Layout Shell & Navigation | COMPLETE | Sonnet 4.5 | 11 files, 410 lines, sidebar + topbar + mobile (3513296) |
 | 4.5 | shadcn/ui Setup & Design Token Integration | COMPLETE | Sonnet 4.5 | Combined with 1.5 — shadcn tokens, Button component (8d0ccdc) |
-| 5 | Settings (API Key + Voice + Models) | NOT STARTED | — | READY — deps complete |
-| 6 | Source Capture & Inbox | NOT STARTED | — | READY — deps complete |
-| 7 | Bucket Management | NOT STARTED | — | Depends on 6 |
-| 8a | Explore Mode (Retrieval + Synthesis) | NOT STARTED | — | Depends on 2.5, 5 |
-| 8b | Draft Mode | NOT STARTED | — | Depends on 5 |
-| 8c | Chat Router | NOT STARTED | — | Depends on 8a, 8b |
-| 9 | Conversation UI | NOT STARTED | — | Depends on 8c, 7 |
-| 10 | Draft Panel | NOT STARTED | — | Depends on 9 |
+| 5 | Settings (API Key + Voice + Models) | COMPLETE | Sonnet | 12 files, 942 lines (7d12f39) |
+| 6 | Source Capture & Inbox | COMPLETE | Sonnet | 18 files, 1,527 lines — Cmd+K, CRUD, auto-embed |
+| 7 | Bucket Management | COMPLETE | Sonnet | CRUD, list, detail, conversation creation |
+| — | Review Fixes (Pre-Task 8) | COMPLETE | Sonnet | 5 HIGH fixes + .env.example (6e166bd) |
+| 8a | Explore Mode (Retrieval + Synthesis) | COMPLETE | Sonnet | Opus streaming, pgvector retrieval, three-way dedup (9ce815e) |
+| 8b | Draft Mode | COMPLETE | Sonnet | Sonnet streaming, voice profiles, `<draft>` parsing (d2df6b0) |
+| 8c | Chat Router | COMPLETE | Sonnet | Auth, SSE streaming, voice resolution, message persistence (6f73896) |
+| 9 | Conversation UI | COMPLETE | Sonnet | 13 files, 1,679 lines — split-pane chat, streaming, mode toggle (e1b5e04) |
+| 10 | Draft Panel | COMPLETE | Sonnet | 5 routes, 4 components, versioning, save/update flow (5cb7174) |
 | 11 | Draft Management Page | NOT STARTED | — | Depends on 10 |
 | 12 | Dashboard | NOT STARTED | — | Depends on 7, 6, 10 |
 | 13 | Realtime & Cross-User | NOT STARTED | — | Depends on 12 |
@@ -916,4 +917,4 @@ Update all page components for loading/error/empty states
 
 1. ~~Set up Supabase project~~ — DONE (2026-02-06)
 2. ~~Get OpenAI API key~~ — DONE (2026-02-06). Task 2.5 complete with OpenAI text-embedding-3-small.
-3. **Get Anthropic API key** — Needed before Task 8 (chat pipeline)
+3. ~~Get Anthropic API key~~ — DONE (confirmed 2026-02-07)
