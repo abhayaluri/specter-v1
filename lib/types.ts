@@ -6,6 +6,7 @@ export interface Profile {
   id: string;
   display_name: string;
   avatar_url: string | null;
+  anthropic_api_key_encrypted: string | null;
   personal_voice_profile: string[];
   explore_model: string;
   draft_model: string;
@@ -128,6 +129,8 @@ export interface SendMessageInput {
   bucketId?: string;
   includeAllBuckets?: boolean;
   platform?: Platform;
+  manualSourceIds?: string[];
+  voiceMode?: 'personal' | 'compound';
 }
 
 // ============================================
